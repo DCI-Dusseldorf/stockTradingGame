@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Bubbly - Boootstrap 4 Admin template by Bootstrapious.com</title>
+    <title>Stock Trading</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
@@ -26,9 +26,9 @@
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
   </head>
   <body>
-    <!-- navbar-->
+    <!-- --------------------------Navbar-->
     <header class="header">
-      <nav class="navbar navbar-expand-lg px-4 py-2 bg-white shadow"><a href="#" class="sidebar-toggler text-gray-500 mr-4 mr-lg-5 lead"><i class="fas fa-align-left"></i></a><a href="index.html" class="navbar-brand font-weight-bold text-uppercase text-base">Bubbly Dashboard</a>
+      <nav class="navbar navbar-expand-lg px-4 py-2 bg-white shadow"><a href="#" class="sidebar-toggler text-gray-500 mr-4 mr-lg-5 lead"><i class="fas fa-align-left"></i></a><a href="index.html" class="navbar-brand font-weight-bold text-uppercase text-base">Stock Trading Market</a>
         <ul class="ml-auto d-flex align-items-center list-unstyled mb-0">
           <li class="nav-item">
             <form id="searchForm" class="ml-auto d-none d-lg-block">
@@ -38,35 +38,44 @@
               </div>
             </form>
           </li>
+
+          <!------- Notification bell near profile pic--------------- -->
+
           <li class="nav-item dropdown mr-3"><a id="notifications" href="http://example.com" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle text-gray-400 px-1"><i class="fa fa-bell"></i><span class="notification-icon"></span></a>
             <div aria-labelledby="notifications" class="dropdown-menu"><a href="#" class="dropdown-item">
-                <div class="d-flex align-items-center">
+                
+              <div class="d-flex align-items-center">
                   <div class="icon icon-sm bg-violet text-white"><i class="fab fa-twitter"></i></div>
                   <div class="text ml-2">
                     <p class="mb-0">You have 2 followers</p>
                   </div>
-                </div></a><a href="#" class="dropdown-item">
-                <div class="d-flex align-items-center">
+                  </div></a><a href="#" class="dropdown-item">
+                
+                  <div class="d-flex align-items-center">
                   <div class="icon icon-sm bg-green text-white"><i class="fas fa-envelope"></i></div>
                   <div class="text ml-2">
                     <p class="mb-0">You have 6 new messages</p>
                   </div>
                 </div></a><a href="#" class="dropdown-item">
-                <div class="d-flex align-items-center">
+                
+                  <div class="d-flex align-items-center">
                   <div class="icon icon-sm bg-blue text-white"><i class="fas fa-upload"></i></div>
                   <div class="text ml-2">
                     <p class="mb-0">Server rebooted</p>
                   </div>
                 </div></a><a href="#" class="dropdown-item">
-                <div class="d-flex align-items-center">
+                
+                  <div class="d-flex align-items-center">
                   <div class="icon icon-sm bg-violet text-white"><i class="fab fa-twitter"></i></div>
                   <div class="text ml-2">
                     <p class="mb-0">You have 2 followers</p>
                   </div>
                 </div></a>
-              <div class="dropdown-divider"></div><a href="#" class="dropdown-item text-center"><small class="font-weight-bold headings-font-family text-uppercase">View all notifications</small></a>
+              
+                <div class="dropdown-divider"></div><a href="#" class="dropdown-item text-center"><small class="font-weight-bold headings-font-family text-uppercase">View all notifications</small></a>
             </div>
           </li>
+          
           <li class="nav-item dropdown ml-auto"><a id="userInfo" href="http://example.com" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle"><img src="img/avatar-6.jpg" alt="Jason Doe" style="max-width: 2.5rem;" class="img-fluid rounded-circle shadow"></a>
             <div aria-labelledby="userInfo" class="dropdown-menu"><a href="#" class="dropdown-item"><strong class="d-block text-uppercase headings-font-family">Mark Stephen</strong><small>Web Developer</small></a>
               <div class="dropdown-divider"></div><a href="#" class="dropdown-item">Settings</a><a href="#" class="dropdown-item">Activity log       </a>
@@ -76,10 +85,13 @@
         </ul>
       </nav>
     </header>
+     
+    <!-- ----Sidebar------------------------- -->
+
     <div class="d-flex align-items-stretch">
       <div id="sidebar" class="sidebar py-3">
         <div class="text-dark  px-3 px-lg-4 py-4 font-weight-bold h1 headings-font-family">Sebastian</div>
-        <ul class="sidebar-menu list-unstyled">
+          <ul class="sidebar-menu list-unstyled">
 
               <li class="sidebar-list-item"><a href="index.html" class="sidebar-link text-muted active"><i class="o-home-1 mr-3 text-gray"></i><span>My Portfolio</span></a></li>
 
@@ -89,23 +101,19 @@
 
               <li class="sidebar-list-item"><a href="forms.html" class="sidebar-link text-muted"><i class="fas fa-history  mr-3 text-gray"></i><span>History</span></a></li>
           
-            <div id="pages" class="collapse">
-              
-            </div>
-          </li>
-              
-        </ul>
-        <div class="text-gray-400 text-uppercase px-3 px-lg-4 py-4 font-weight-bold small headings-font-family">EXTRAS</div>
-        
+            <div id="pages" class="collapse"></div>
+          </ul>
+        <div class="text-gray-400 text-uppercase px-3 px-lg-4 py-4 font-weight-bold small headings-font-family"></div>
       </div>
-      <div class="page-holder w-100 d-flex flex-wrap">
-        <div class="container-fluid px-xl-5">
-           <section class="py-5">
-            
-          </section> 
-          <section>
+
+      <!------- Middle section with Graph ------>
+
+       <div class="page-holder w-100 d-flex flex-wrap ">
+        <div class="container-fluid px-xl-5 ">
+          <section class="py-5"></section> 
+           <section>
             <div class="row mb-4">
-              <div class="col-lg-7 mb-4 mb-lg-0">
+              <div class="col-lg-7 mb-4 mb-lg-0 ">
                 <div class="card">
                   <div class="card-header">
                     <button style="float: right;" type="button" class="btn btn-primary">Favourite</button>
@@ -118,48 +126,41 @@
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="col-lg-5 mb-4 mb-lg-0 pl-lg-0">
-                <div class="card mb-3">
-                  <div class="card-body">
-                    <div class="row align-items-center flex-row">
+            </div>
+              <!-- -------------Side Cards------------------ -->
 
-                      <button type="button" class="btn btn-block btn-warning mb-3">GET RECOMMENDATION</button>
+            <div class="col-lg-5 mb-4 mb-lg-0 pl-lg-0 ">
+              <div class="card mb-3 ">
+                <div class="card-body">
+                  <div class="row align-items-center flex-row">
+
+                    <button type="button" class="btn btn-block btn-warning mb-3">GET RECOMMENDATION</button>
                       
-
-
-                      <div class="card mb-3 border border-dark">
-                        <div class="card-body">
-                          <h5 class="card-title">Card title</h5>
-                          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                          <a href="#" class="btn  btn-block btn-success ">BUY</a>
-                        </div>
+                    <div class="card mb-3 border border-dark">
+                      <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                        <a href="#" class="btn  btn-block btn-success ">BUY</a>
                       </div>
-                      
-                      
-                      <div class="card border border-dark">
-                        <div class="card-body">
-                          <h5 class="card-title">Card title</h5>
-                          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                          <a href="#" class="btn btn-block btn-danger">SELL</a>
-                        </div>
-                      </div>
-                      
                     </div>
+                      
+                      
+                    <div class="card border border-dark">
+                      <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                        <a href="#" class="btn btn-block btn-danger">SELL</a>
+                      </div>
+                    </div>
+                      
                   </div>
-                  </div>
-                </section> 
-<!--for other card-->
+                </div>
+              </div>
+            </div> 
+          </section>  
+          
+<!---------- JavaScript files---------->
 
-
-
-
-                
-
-                
-                    
-                  
-    <!-- JavaScript files-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/popper.js/umd/popper.min.js"> </script>
     <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
