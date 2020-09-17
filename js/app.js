@@ -1,31 +1,38 @@
-// THE DEFAULT CHART IS JUST FOR DEMO PURPOSED
-// START EDIT YOUR JS FILE FROM HERE
+let service;
+if (config.IS_MOCK_DATA) {
+  service = new Proxy(new MockFinnHubService());
+} else {
+  service = new Proxy(new FinnHubService());
+}
+// if we want to use web service directly   service = new FinnHubService();
 
-Highcharts.getJSON(
-  'https://demo-live-data.highcharts.com/aapl-c.json',
-  function (data) {
-    // Create the chart
-    Highcharts.stockChart('chart-container', {
-      chart: {
-        type: 'spline',
-      },
-      rangeSelector: {
-        selected: 1,
-      },
+let timeFrom = Date.parse("2020-01-16T03:24:00") / 1000;
+let timeTo = Date.parse("2020-11-16T03:24:00") / 1000;
+// AAPL,IBM,EBAY,GOOG
+let companyName = "GOOG";
 
-      title: {
-        text: 'AAPL Stock Price',
-      },
+service.getData(companyName, timeFrom, timeTo).then((data) => {
+  // Create the chart
+  Highcharts.stockChart("chart-container", {
+    chart: {
+      type: "spline",
+    },
+    rangeSelector: {
+      selected: 1,
+    },
 
-      series: [
-        {
-          name: 'AAPL',
-          data: data,
-          tooltip: {
-            valueDecimals: 2,
-          },
+    title: {
+      text: data["companyName"] + " Stock Price",
+    },
+
+    series: [
+      {
+        name: data["companyName"],
+        data: data["dataSet"],
+        tooltip: {
+          valueDecimals: 2,
         },
-      ],
-    });
-  }
-);
+      },
+    ],
+  });
+});
