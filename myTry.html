@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button id="buy">buy</button>
+    <button id="confirm">confirm</button>
+  </body>
+  <script>
+    // Class to get data from Finnhub
+    class StockData {
+      key = "btgepcv48v6thhaqa2lg";
+      today = new Date().getTime();
+
+      constructor(symbol) {
+        this.symbol = symbol;
+      }
+      async getData() {
+        try {
+          const url1 = `https://finnhub.io/api/v1/stock/candle?symbol=${this.symbol}&resolution=D&from=1577833200&to=${this.today}&token=${this.key}`;
+          const response = await fetch(url1);
+          const data = await response.json();
+          const chartData = [];
+          for (let i = 0; i < data.t.length; i++) {
+            chartData.push([data.t[i] * 1000, data.c[i]]);
+          }
+          return chartData;
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    }
+    let predata = new StockData("AAPL");
+    predata.getData().then((data) => console.log(data));
+
+    //Class to buy or sell
+    class BuyOrSell extends StockData {
+      estimatedValue = Number;
+      constructor(symbol) {
+        super(symbol);
+      }
+      async executeBuy(quantity) {
+        const buyPrice = await super.getData().then((data) => data.pop()[1]);
+        this.buyValue = buyPrice * quantity;
+        const cash = PORTFOLIO.retrieveCash();
+        if (this.buyValue < cash) {
+          console.log("success");
+          PORTFOLIO.updatePortfolio(this.symbol, buyPrice, quantity);
+          //cash = cash - this.buyValue;
+        } else {
+          console.log("not sufficient balance");
+        }
+      }
+      async executeSell(quantity) {}
+    }
+
+    // class to include in portfolio
+    class Portfolio {
+      cash = 1000000;
+      portfolioValue = 1000000;
+      constructor() {
+        this.stocks = [];
+      }
+      retrieveCash() {
+        return localStorage.getItem("cash");
+      }
+      retrievePortfolio(symbol) {
+        // display all the stocks bought from localstorage
+        localStorage.getItem(symbol);
+      }
+      updatePortfolio(symbol, buyPrice, quantity) {
+        //write all the 3 values in local storage
+        localStorage.setItem(symbol, JSON.stringify({ buyPrice, quantity }));
+      }
+      deletePortfolio() {}
+    }
+
+    let PORTFOLIO = new Portfolio();
+
+    const btnBuy = document.getElementById("buy");
+    const btnConfirm = document.getElementById("confirm");
+
+    btnBuy.addEventListener("click", (e) => {
+      e.preventDefault();
+      const buy = new BuyOrSell("AAPL");
+      let quantity = prompt("please enter the quantity", 1);
+      buy.executeBuy(quantity);
+    });
+  </script>
+</html>
