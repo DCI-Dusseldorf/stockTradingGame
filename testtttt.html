@@ -49,7 +49,7 @@ border: 1px solid #e4e4e4;
 
 ul = document.getElementById("users-list");
 
-let ourlists = function(lists){
+let render_lists = function(lists){
   let li = "";
   for(index in lists){
     li += "<li>" + lists[index] + "</li>";
@@ -57,9 +57,9 @@ let ourlists = function(lists){
   ul.innerHTML = li;
 }
 
-ourlists(users);
+render_lists(users);
 
-// lets filters 
+// lets filters it
 input = document.getElementById('filter_users');
 
 let filterUsers = function(event){
