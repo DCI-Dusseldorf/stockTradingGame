@@ -1,1 +1,10 @@
-/* your styles go here */
+html {
+  scroll-behavior: smooth;
+}
+
+.stickyInfo {
+  position: fixed;
+  left: 40px;
+  top: 50vh;
+  /* width: 100%; */
+}
