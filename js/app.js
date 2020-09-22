@@ -133,7 +133,7 @@ class Portfolio extends StockData {
     Object.keys(portfQuantity).forEach(async (symbol) => {
       const currentPrice = await super.getCurrentPrice(symbol);
       portfolioValue += portfQuantity[symbol] * currentPrice;
-      localStorage.setItem("PortFolio Value", portfolioValue);
+      localStorage.setItem("PortFolioValue", portfolioValue);
     });
     return JSON.parse(localStorage.getItem("PortFolioValue")).toFixed(2);
   }
@@ -170,9 +170,11 @@ let PORTFOLIO = new Portfolio();
 //   //PORTFDISPLAY.innerText = PORTFOLIO.computePortfValue();
 // });
 //const PORTFVALUE = document.querySelector(".portfValue");
-const PORTFDISPLAY = document.querySelector(".portfDisplay");
-console.log(PORTFDISPLAY);
+let PORTFDISPLAY = document.querySelector(".portfDisplay");
 
 function display() {
-  PORTFDISPLAY = PORTFOLIO.computePortfValue();
+  PORTFOLIO.addToPortfolio("GOOG", "23", "1");
+  PORTFDISPLAY.innerHTML = PORTFOLIO.computePortfValue();
 }
+
+display();
