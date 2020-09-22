@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button class="buy">buy</button>
+    <button class="sell">sell</button>
+  </body>
+
+  <script>
+    //------------script started-----------
+
+    class StockData {
+      apiKey = "btg6u0748v6r32agatfg";
+      presentTime = new Date().getTime();
+
+      constructor(symbol) {
+        this.symbol = symbol;
+      }
+      async getData() {
+        try {
+          const url = `https://finnhub.io/api/v1/stock/candle?symbol=${this.symbol}&resolution=D&from=1572651390&to=${this.presentTime}&token=${this.apiKey}`;
+
+          const response = await fetch(url);
+          const data = await response.json();
+          return data;
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    }
+    let oldData = new StockData("AAPL");
+
+    oldData.getData().then((data) => console.log(data.c));
+
+    //------------class stock----
+
+    class Stock {
+      id = String;
+      price = Number;
+
+      history = [
+        {
+          date: Date,
+          price: Number,
+        },
+      ];
+
+      constructor(id) {
+        this.id = id;
+        this.price = Math.random() * 1000;
+        this.history = [
+          { date: new Date(), price: Math.random() * 1000 },
+          { date: new Date(), price: Math.random() * 1000 },
+        ]; // << this would be individual to each stock
+      }
+    }
+
+    class BoughtStock extends Stock {
+      boughtAt = 0;
+      quantity = 0;
+
+      constructor(id, quantity) {
+        super(id);
+
+        this.quantity = quantity;
+        this.boughtAt = this.price;
+
+        // replace this to use Portfolio::addBoughtStock
+        PORTFOLIO.addBoughtStock(this);
+
+        PORTFOLIO.recalculateBalance();
+      }
+    }
+
+    class Portfolio {
+      cash = 1000000;
+      balance = 1000000;
+
+      constructor() {
+        this.stocks = [];
+      }
+
+      addBoughtStock(boughtStock) {
+        // complete this function
+
+        this.stocks.push(boughtStock);
+        this.cash = this.cash - boughtStock.quantity * boughtStock.boughtAt;
+      }
+
+      recalculateBalance() {
+        // complete this function
+        let accumulatedStockValue = 0;
+
+        this.stocks.forEach((stock) => {
+          accumulatedStockValue += stock.quantity * stock.price;
+        });
+
+        this.balance = this.cash + accumulatedStockValue;
+      }
+    }
+
+    const PORTFOLIO = new Portfolio();
+
+    let b1 = new BoughtStock("aapl");
+    let b2 = new BoughtStock("spcx");
+  </script>
+</html>
