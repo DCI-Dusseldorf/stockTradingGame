@@ -6,157 +6,193 @@
     <title>Document</title>
   </head>
   <body>
-    <button id="buy">buy</button>
-    <button id="sell">sell</button>
+    <div class="main">
+      <div class="portfolioDisplay">My PortFolio</div>
+
+      <form action="">
+        <label for="symbol">Symbol</label>
+        <input type="text" name="symbol" value="AAPL" /><br />
+        <label for="quantity">Quantity</label>
+        <input type="text" name="quantity" value="0" /><br />
+        <button id="buy">buy</button>
+        <button id="sell">sell</button>
+      </form>
+    </div>
     <button id="refreshPortfolio">Refresh Portfolio</button>
   </body>
+  <style>
+    .main {
+      display: flex;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      margin: 3px 3px;
+    }
+    .portfolioDisplay {
+      width: 800px;
+      height: 500px;
+      border: 1px solid black;
+      text-align: center;
+      font-size: large;
+      font-weight: bolder;
+    }
+    #refreshPortfolio {
+      margin: 3px 350px auto;
+    }
+  </style>
   <script>
-     // Class to get data from Finnhub
-     class StockData {
-       key = "btgepcv48v6thhaqa2lg";
-       today = new Date().getTime();
+    // Class to get data from Finnhub
+    class StockData {
+      key = "btgepcv48v6thhaqa2lg";
+      today = new Date().getTime();
 
-       constructor() {
-         //this.symbol = symbol;
-       }
-       async getData(symbol) {
-         try {
-           const url1 = `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=D&from=1577833200&to=${this.today}&token=${this.key}`;
-           const response = await fetch(url1);
-           const data = await response.json();
-           const chartData = [];
-           for (let i = 0; i < data.t.length; i++) {
-             chartData.push([data.t[i] * 1000, data.c[i]]);
-           }
-           return chartData;
-         } catch (error) {
-           console.log(error);
-         }
-       }
-       async getCurrentPrice(symbol) {
-         return await this.getData(symbol).then((data) => data.pop()[1]);
-       }
-     }
+      async getData(symbol) {
+        try {
+          const url1 = `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=D&from=1577833200&to=${this.today}&token=${this.key}`;
+          const response = await fetch(url1);
+          const data = await response.json();
+          const chartData = [];
+          for (let i = 0; i < data.t.length; i++) {
+            chartData.push([data.t[i] * 1000, data.c[i]]);
+          }
+          return chartData;
+        } catch (error) {
+          console.log(error);
+        }
+      }
 
-    // let FETCHDATA = new StockData();
-     //predata.getData().then((data) => console.log(data));
+      async getCurrentPrice(symbol) {
+        return await this.getData(symbol).then((data) => data.pop()[1]);
+      }
+    }
 
-     //Class to buy or sell
-     class BuyOrSell extends StockData {
-       buyValue = Number;
-       sellValue = Number;
-       async executeBuy(symbol, quantity) {
-         const buyPrice = await super.getCurrentPrice(symbol);
-         this.buyValue = buyPrice * quantity;
-         let cash = PORTFOLIO.retrieveCash();
-         if (this.buyValue < cash) {
-           console.log("Buy order executed successfully");
-           PORTFOLIO.addToPortfolio(symbol, buyPrice, quantity);
-           cash = cash - this.buyValue;
-           PORTFOLIO.setCash(cash);          
-         } else {
-           console.log("Insufficient balance to execute Buy order");
-         }
-         PORTFOLIO.computePortfValue();
-       }
-       async executeSell(symbol, quantity) {
-         const sellPrice = await super.getCurrentPrice(symbol);
-         this.sellValue = sellPrice * quantity;
-         let cash = JSON.parse(PORTFOLIO.retrieveCash());
-         const portfQuantity = PORTFOLIO.computeQuantity();
-         if (quantity <= portfQuantity[symbol]) {
-           console.log("Sell order executed successfully");
-           PORTFOLIO.addToPortfolio(symbol, sellPrice, quantity * -1);
-           cash = cash + this.sellValue;
-           PORTFOLIO.setCash(cash);
-         } else {
-           console.log("Insufficient quantity to execute Sell order");
-         }
-         PORTFOLIO.computePortfValue();
-       }
-     }
+    //Class to Buy or Sell stocks
+    class BuyOrSell {
+      buyValue = Number;
+      sellValue = Number;
 
-     // class to include in portfolio
-     class Portfolio extends StockData {
-       cash = 1000000;
-       stocks = [];
-       // constructor() {
-       //   this.cash = 1000000;
-       //   localStorage.setItem("cash", this.cash);
-       // }
+      async executeBuy(symbol, quantity) {
+        const stock = new StockData();
+        const buyPrice = await stock.getCurrentPrice(symbol);
+        this.buyValue = buyPrice * quantity;
+        let cash = PORTFOLIO.retrieveCash();
+        if (this.buyValue < cash) {
+          console.log("Buy order executed successfully");
+          PORTFOLIO.addToPortfolio(symbol, buyPrice, quantity);
+          cash = cash - this.buyValue;
+          PORTFOLIO.setCash(cash);
+        } else {
+          console.log("Insufficient balance to execute Buy order");
+        }
+        PORTFOLIO.computePortfValue();
+      }
 
-       retrieveCash() {
-         return localStorage.getItem("cash");
-       }
+      async executeSell(symbol, quantity) {
+        const stock = new StockData();
+        const sellPrice = await stock.getCurrentPrice(symbol);
+        this.sellValue = sellPrice * quantity;
+        let cash = JSON.parse(PORTFOLIO.retrieveCash());
+        const portfQuantity = PORTFOLIO.computeQuantity();
+        if (quantity <= portfQuantity[symbol]) {
+          console.log("Sell order executed successfully");
+          PORTFOLIO.addToPortfolio(symbol, sellPrice, quantity * -1);
+          cash = cash + this.sellValue;
+          PORTFOLIO.setCash(cash);
+        } else {
+          console.log("Insufficient quantity to execute Sell order");
+        }
+        PORTFOLIO.computePortfValue();
+      }
+    }
 
-       setCash(cash) {
-         return localStorage.setItem("cash", cash);
-       }
+    // class to include in the portfolio
+    class Portfolio {
+      cash = 1000000;
+      stocks = [];
 
-       computeQuantity() {
-         const quantities = {};
-         let tempArray = [];
-         this.stocks = JSON.parse(localStorage.getItem("myPortfolio"));
-         this.stocks.forEach(([symbol, { buyPrice, quantity }], index) => {
-           tempArray = this.stocks[index];
-           if (quantities[symbol]) {
-             quantities[symbol] += parseInt(quantity);
-           } else {
-             quantities[symbol] = parseInt(quantity);
-           }
-         });
-         return quantities;
-       }
+      constructor() {
+        try {
+          if (localStorage.getItem("myPortfolio")) {
+            this.stocks = JSON.parse(localStorage.getItem("myPortfolio"));
+          } else {
+            this.stocks = [];
+          }
+        } catch (e) {
+          this.stocks = [];
+        }
+      }
 
-       addToPortfolio(symbol, buyPrice, quantity) {
-         //write all the 3 values in local storage
-         this.stocks.push([symbol, { buyPrice, quantity }]);
-         localStorage.setItem("myPortfolio", JSON.stringify(this.stocks));
-       }
-       
-        computePortfValue() {
+      retrieveCash() {
+        return localStorage.getItem("cash");
+      }
 
+      setCash(cash) {
+        return localStorage.setItem("cash", cash);
+      }
+
+      computeQuantity() {
+        const quantities = {};
+        let tempArray = [];
+        this.stocks = JSON.parse(localStorage.getItem("myPortfolio"));
+        this.stocks.forEach(([symbol, { buyPrice, quantity }], index) => {
+          tempArray = this.stocks[index];
+          if (quantities[symbol]) {
+            quantities[symbol] += parseInt(quantity);
+          } else {
+            quantities[symbol] = parseInt(quantity);
+          }
+        });
+        return quantities;
+      }
+
+      addToPortfolio(symbol, buyPrice, quantity) {
+        //write all the 3 values in local storage
+        this.stocks.push([symbol, { buyPrice, quantity }]);
+        localStorage.setItem("myPortfolio", JSON.stringify(this.stocks));
+      }
+
+      computePortfValue() {
         let portfolioValue = 0;
-        const portfQuantity =this.computeQuantity();     
-        Object.keys(portfQuantity).forEach(async(symbol)=>{
-          const currentPrice = await super.getCurrentPrice(symbol);          
-          portfolioValue += portfQuantity[symbol]*currentPrice;
-          localStorage.setItem('PortFolio Value',portfolioValue);
+        const portfQuantity = this.computeQuantity();
+
+        Object.keys(portfQuantity).forEach(async (symbol) => {
+          const stock = new StockData();
+          const currentPrice = await stock.getCurrentPrice(symbol);
+          portfolioValue += portfQuantity[symbol] * currentPrice;
+          localStorage.setItem("PortFolioValue", portfolioValue);
         });
         //console.log(this.portfolioValue);
-        }
-     }
+      }
+    }
 
-     // Main routine;
-     let PORTFOLIO = new Portfolio();
+    // Main routine;
+    let PORTFOLIO = new Portfolio();
 
-     const btnBuy = document.getElementById("buy");
-     const btnSell = document.getElementById("sell");
-     const btnrefreshPortfolio = document.getElementById('refreshPortfolio');
+    const btnBuy = document.getElementById("buy");
+    const btnSell = document.getElementById("sell");
+    const btnrefreshPortfolio = document.getElementById("refreshPortfolio");
 
-     btnBuy.addEventListener("click", (e) => {
-       e.preventDefault();
-       const exec = new BuyOrSell();
-       let symbol = prompt("please enter the symbol", "AAPL");
-       let quantity = prompt("please enter the quantity", 1);
+    btnBuy.addEventListener("click", (e) => {
+      e.preventDefault();
+      const exec = new BuyOrSell();
+      let symbol = prompt("please enter the symbol", "AAPL");
+      let quantity = prompt("please enter the quantity", 1);
 
-       exec.executeBuy(symbol, quantity);
-     });
-     btnSell.addEventListener("click", (e) => {
-       e.preventDefault();
-       const exec = new BuyOrSell();
-       let symbol = prompt("please enter the symbol", "AAPL");
-       let quantity = prompt("please enter the quantity", 1);
-       exec.executeSell(symbol, quantity);
-     });
-     btnrefreshPortfolio.addEventListener("click", (e) => {
-       e.preventDefault();
+      exec.executeBuy(symbol, quantity);
+    });
+
+    btnSell.addEventListener("click", (e) => {
+      e.preventDefault();
+      const exec = new BuyOrSell();
+      let symbol = prompt("please enter the symbol", "AAPL");
+      let quantity = prompt("please enter the quantity", 1);
+      exec.executeSell(symbol, quantity);
+    });
+
+    btnrefreshPortfolio.addEventListener("click", (e) => {
+      e.preventDefault();
       PORTFOLIO.computePortfValue();
-       
-     });
-   
-  </script>
-</html>
-
+    });
   </script>
 </html>
