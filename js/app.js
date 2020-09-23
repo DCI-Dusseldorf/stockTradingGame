@@ -300,18 +300,32 @@ function simulate() {
 
   portfolio.stocks.forEach((stock) => {
     let luck = Math.random() * (10 - 5) + 5;
-    stock.boughtAt += (stock.boughtAt * luck) / 100;
-    console.log(luck.toFixed(1) + '% increased');
+    let badLuck = Math.floor(Math.random() * 10) - 9;
+
+    stock.boughtAt += (stock.boughtAt * (luck + badLuck)) / 100;
+
+    console.log(
+      stock.symbol +
+        ' increased ' +
+        luck.toFixed(1) +
+        '%' +
+        ' but then decreased ' +
+        badLuck.toFixed(1) +
+        '%'
+    );
   });
 
-  let newBalance = 270000; // From cash
+  let newBalance = Number(portfolio.cash);
   portfolio.stocks.forEach((stock) => {
     newBalance += stock.boughtAt * stock.quantity;
   });
   portfolio.balance = newBalance;
   portfolio.addToLStorage();
+  ui.updatePortfolioInfo(portfolio);
+  ui.updateStickyInfo(portfolio);
   console.log('Now portfolio worths: ' + newBalance.toLocaleString());
 }
 
 /** Let's get the fun begins */
+// Remember: try to buy some stocks first, then activate the function below
 // setInterval(simulate, 10000);
