@@ -48,32 +48,27 @@ export default class Portfolio {
     return quantityCount;
   }
 
-  // done
   addToPortfolio(boughtStock) {
     this.stocks.push(boughtStock);
   }
 
   addToList(symbol) {
     const isDuplicated = this.hasOwnStock(symbol);
-    console.log(isDuplicated);
     if (isDuplicated === undefined) {
       this.investmentList.push(symbol);
     }
-    console.log(this.investmentList);
   }
 
   editPortfolio(stock) {
     console.log('success');
   }
 
-  // done
   calcCash(stock, type) {
     if (type === 'bought') {
       this.cash = this.cash - stock.boughtAt * stock.quantity;
     } else {
       this.cash = this.cash + stock.soldAt * stock.quantity;
     }
-    console.log('Cash now is: ' + this.cash);
   }
 
   initBalance() {
@@ -93,7 +88,6 @@ export default class Portfolio {
     );
 
     this.balance = this.cash + totalAcc - totalSold;
-    // console.log('Balance now is: ' + this.balance);
     this.addToLStorage();
   }
 

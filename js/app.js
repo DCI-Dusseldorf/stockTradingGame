@@ -19,6 +19,8 @@ const portfolio = new Portfolio();
  * - stock = new Stock(symbol)
  * - companyName
  * - chart = new Chart()
+ *  boughtStock
+ *  soldStock
  */
 const state = {};
 
@@ -34,7 +36,7 @@ function toNum(str) {
  */
 elements.resetBtn.onclick = () => {
   localStorage.clear();
-  alert('GAME RESET. PLEASE RELOAD THE PAGE ⚠️⚠️⚠️');
+  alert('GAME RESET. PLEASE RELOAD THE PAGE 😎😎😎');
 };
 
 /**
@@ -49,11 +51,7 @@ async function handleSearch() {
   const query = elements.searchField.value;
 
   if (query) {
-    // const search = new Search(querry);
     state.search = new Search(query);
-
-    // await searchUI.renderLoader();
-
     await state.search.getResults();
 
     ui.clearSearchField();
@@ -180,7 +178,6 @@ function handleBuyStock() {
     portfolio.calcCash(state.boughtStock, 'bought');
     portfolio.calcBalance();
 
-    ui.updateStickyInfo(portfolio);
     ui.updatePortfolioInfo(portfolio);
     ui.addHistory('bought', state.boughtStock);
     ui.clearQuantity();
@@ -212,7 +209,6 @@ function handleSellStock() {
   const totalQuantity = portfolio.getTotalStockQuantity(state.stock.symbol);
 
   if (result !== undefined) {
-    console.log(totalQuantity);
     if (elements.quantity.value <= totalQuantity) {
       state.soldStock = new SoldStock(
         elements.stockChoice.value,
@@ -223,10 +219,8 @@ function handleSellStock() {
       portfolio.addSoldStock(state.soldStock);
       portfolio.calcCash(state.soldStock, 'sold');
       portfolio.calcBalance();
-      console.log(state.soldStock);
 
       ui.updatePortfolioInfo(portfolio);
-      ui.updateStickyInfo(portfolio);
       ui.addHistory('sold', state.soldStock);
       ui.clearQuantity();
     } else {
@@ -267,26 +261,13 @@ if (portfolio.stocks.length > 0) {
   portfolio.addToLStorage();
 }
 
-// FIXME
-// console.log(portfolio.stocks);
-// if (portfolio.stocks.length > 0) {
-//   portfolio.stocks.forEach((transaction) => {
-//     console.log(transaction.time.toLocaleTime());
-//     // ui.addHistory('bought', transaction);
-//   });
-// }
-
-// console.log(favorite.favStocks);
 favorite.checkLStorage();
-
-// console.log(favorite.favStocks);
 if (favorite.favStocks.length > 0) {
   favorite.favStocks.forEach((symbol) => {
     ui.addToFavList(symbol);
   });
 }
 
-ui.updateStickyInfo(portfolio);
 ui.updatePortfolioInfo(portfolio);
 
 /**
@@ -296,7 +277,9 @@ function simulate() {
   portfolio.checkLStorage();
 
   console.log('Portfolio value: ' + Number(portfolio.balance).toLocaleString());
-  console.log('Simulation begins... getting profit every 10 seconds 🤑🤑🤑');
+  console.log(
+    'Simulation begins... getting profit or loss every 10 seconds 🤑🤑🤑'
+  );
 
   portfolio.stocks.forEach((stock) => {
     let luck = Math.random() * (10 - 5) + 5;
@@ -322,7 +305,6 @@ function simulate() {
   portfolio.balance = newBalance;
   portfolio.addToLStorage();
   ui.updatePortfolioInfo(portfolio);
-  ui.updateStickyInfo(portfolio);
   console.log('Now portfolio worths: ' + newBalance.toLocaleString());
 }
 
