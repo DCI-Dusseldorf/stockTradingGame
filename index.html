@@ -169,7 +169,7 @@
                     </div>
                   </div>
                   <div class="card-body">
-                    <!-- EXPERIMENTAL SEARCH RESULTS -->
+                    <!-- SEARCH RESULTS -->
                     <div class="list-group shadow" id="searchResults">
                       <!-- <a href="#" class="list-group-item list-group-item-action bg-hover-gradient-blue">Dapibus ac facilisis in</a>
                       <a href="#" class="list-group-item list-group-item-action bg-hover-gradient-blue">Morbi leo risus</a>
@@ -219,7 +219,7 @@
                     <div class="modal-header">
                       <h5
                         class="modal-title text-gray text-uppercase"
-                        id="exampleModalLabel"
+                        id="transactionType"
                       >
                         Review Order
                       </h5>
@@ -235,6 +235,26 @@
                     <form id="transactionModal">
                       <div class="modal-body">
                         <div class="form-group">
+                          <label for="stockChoice"
+                            >Symbol - Quantity Owned</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            value="abc"
+                            id="stockChoice"
+                            disabled
+                          />
+                        </div>
+                        <!-- <div class="form-group">
+                          <label for="stockOptions">Select Stock</label>
+                          <select class="form-control" id="stockOptions">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                          </select>
+                        </div> -->
+                        <div class="form-group">
                           <label for="marketPrice">Market Price</label>
                           <input
                             type="text"
@@ -249,12 +269,12 @@
                           <input
                             type="text"
                             class="form-control"
-                            placeholder="Enter quantity of shares"
+                            placeholder="Enter quantity of shares to trade"
                             id="quantity"
                           />
                         </div>
                         <div class="form-group">
-                          <label for="totalCost">Total</label>
+                          <label for="totalCost">Total Transaction Value</label>
                           <input
                             type="text"
                             class="form-control"
@@ -310,45 +330,6 @@
                     </div>
                     <div class="modal-body">
                       <!-- CONTENT -->
-                    </div>
-                    <div class="modal-footer">
-                      <button
-                        type="button"
-                        class="btn btn-secondary text-uppercase"
-                        data-dismiss="modal"
-                      >
-                        Close
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- END MODAL -->
-              <!-- MODALS FOR INFOS -->
-              <div
-                class="modal fade"
-                id="alertModal"
-                tabindex="-1"
-                aria-labelledby="exampleModalLabel"
-                aria-hidden="true"
-              >
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title text-gray" id="exampleModalLabel">
-                        Error
-                      </h5>
-                      <button
-                        type="button"
-                        class="close"
-                        data-dismiss="modal"
-                        aria-label="Close"
-                      >
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      Oops, you don't known this stock
                     </div>
                     <div class="modal-footer">
                       <button
@@ -439,12 +420,71 @@
                     </div> -->
                   </div>
                 </div>
+                <!-- NEW PORTFOLIO MANAGEMENT -->
+                <div class="card mt-3">
+                  <div class="card-header">
+                    <div class="row">
+                      <div class="col-12" id="portfolioInfo">
+                        <h2 class="h5 text-uppercase text-gray-500">
+                          Portfolio Value
+                        </h2>
+                        <h2 class="h4 text-uppercase" id="balance">$0</h2>
+                        <h2 class="h6 text-uppercase text-green">
+                          <i class="fas fa-caret-up mr-1"></i>0.99%
+                        </h2>
+                        <!-- <h2 class="h6 text-uppercase text-red">
+                          <i class="fas fa-caret-down mr-1"></i>4.12%
+                        </h2> -->
+                        <p class="text-uppercase text-gray-500 mt-5">Cash</p>
+                        <h5 class="h5 text-uppercase" id="cash">$0</h5>
+                        <button class="btn btn-sm btn-danger" id="resetBtn">
+                          Reset
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-body" id="portfolioItems">
+                    <!-- <p class="mb-5 text-gray">
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit
+                    </p> -->
+                    <!-- <div class="chart-holder mt-5 mb-5">
+                      <div
+                        id="chart-container"
+                        style="width: 100%; height: 425px"
+                      ></div>
+                    </div> -->
+                    <!-- <div
+                      class="bg-white bg-hover-gradient-blue shadow roundy px-4 py-3 d-flex align-items-center justify-content-between mb-4"
+                    >
+                      <div class="flex-grow-1 d-flex align-items-center">
+                        <div class="text">
+                          <h6 class="mb-0">AAPL</h6>
+                          <span class="text-gray">100 Shares</span>
+                        </div>
+                      </div>
+                      <div class="text-green font-weight-bold">
+                        $20,000 Profit
+                      </div>
+                    </div>
+                    <div
+                      class="bg-white bg-hover-gradient-blue shadow roundy px-4 py-3 d-flex align-items-center justify-content-between mb-4"
+                    >
+                      <div class="flex-grow-1 d-flex align-items-center">
+                        <div class="text">
+                          <h6 class="mb-0">GOOG</h6>
+                          <span class="text-gray">200 Shares</span>
+                        </div>
+                      </div>
+                      <div class="text-red font-weight-bold">$100,000 Loss</div>
+                    </div> -->
+                  </div>
+                </div>
               </div>
             </div>
           </section>
           <section class="pt-1 pb-5">
             <div class="row">
-              <!-- TRANSACTION HISTORY -->
+              <!-- TRANSACTION HISTORY (DEBIT) -->
               <div class="col-6">
                 <div class="card mb-5 mb-lg-0">
                   <div class="card-header">
@@ -484,61 +524,43 @@
                   </div>
                 </div>
               </div>
-              <!-- PORTFOLIO MANAGEMENT -->
+              <!-- TRANSACTION HISTORY (CREDIT) -->
               <div class="col-6">
-                <div class="card">
+                <div class="card mb-5 mb-lg-0">
                   <div class="card-header">
-                    <div class="row">
-                      <div class="col-6" id="portfolioInfo">
-                        <h2 class="h5 text-uppercase text-gray-500">
-                          Portfolio Value
-                        </h2>
-                        <h2 class="h4 text-uppercase" id="balance">$0</h2>
-                        <h2 class="h6 text-uppercase text-green">
-                          <i class="fas fa-caret-up mr-1"></i>0.99%
-                        </h2>
-                        <!-- <h2 class="h6 text-uppercase text-red">
-                          <i class="fas fa-caret-down mr-1"></i>4.12%
-                        </h2> -->
-                        <p class="text-uppercase text-gray-500 mt-5">Cash</p>
-                        <h5 class="h5 text-uppercase" id="cash">$0</h5>
-                      </div>
-                    </div>
+                    <h2 class="h6 mb-0 text-uppercase">Transaction history</h2>
                   </div>
-                  <div class="card-body">
-                    <!-- <p class="mb-5 text-gray">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit
-                    </p> -->
-                    <!-- <div class="chart-holder mt-5 mb-5">
-                      <div
-                        id="chart-container"
-                        style="width: 100%; height: 425px"
-                      ></div>
+                  <div class="card-body" id="transactionHistoryCredit">
+                    <!-- <div
+                      class="d-flex justify-content-between align-items-start align-items-sm-center mb-4 flex-column flex-sm-row"
+                    >
+                      <div class="left d-flex align-items-center">
+                        <div class="text">
+                          <h6 class="mb-0 d-flex align-items-center">
+                            <span>AAPL</span>
+                          </h6>
+                          <small class="text-gray">Bought</small>
+                        </div>
+                      </div>
+                      <div class="right ml-5 ml-sm-0 pl-3 pl-sm-0 text-red">
+                        <h5>-$20,000</h5>
+                      </div>
+                    </div>
+                    <div
+                      class="d-flex justify-content-between align-items-start align-items-sm-center mb-4 flex-column flex-sm-row"
+                    >
+                      <div class="left d-flex align-items-center">
+                        <div class="text">
+                          <h6 class="mb-0 d-flex align-items-center">
+                            <span>GOOG</span>
+                          </h6>
+                          <small class="text-gray">Sold</small>
+                        </div>
+                      </div>
+                      <div class="right ml-5 ml-sm-0 pl-3 pl-sm-0 text-green">
+                        <h5>+$100,000</h5>
+                      </div>
                     </div> -->
-                    <div
-                      class="bg-white bg-hover-gradient-blue shadow roundy px-4 py-3 d-flex align-items-center justify-content-between mb-4"
-                    >
-                      <div class="flex-grow-1 d-flex align-items-center">
-                        <div class="text">
-                          <h6 class="mb-0">AAPL</h6>
-                          <span class="text-gray">100 Shares</span>
-                        </div>
-                      </div>
-                      <div class="text-green font-weight-bold">
-                        $20,000 Profit
-                      </div>
-                    </div>
-                    <div
-                      class="bg-white bg-hover-gradient-blue shadow roundy px-4 py-3 d-flex align-items-center justify-content-between mb-4"
-                    >
-                      <div class="flex-grow-1 d-flex align-items-center">
-                        <div class="text">
-                          <h6 class="mb-0">GOOG</h6>
-                          <span class="text-gray">200 Shares</span>
-                        </div>
-                      </div>
-                      <div class="text-red font-weight-bold">$100,000 Loss</div>
-                    </div>
                   </div>
                 </div>
               </div>

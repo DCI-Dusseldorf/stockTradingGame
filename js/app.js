@@ -2,7 +2,7 @@
 import UI, { elements } from './UI.js';
 import Chart from './Chart.js';
 import Stock from './Stock.js';
-import BoughtStock from './BoughtStock.js';
+import { BoughtStock, SoldStock } from './TradedStock.js';
 import Favorite from './Favorite.js';
 import Portfolio from './Portfolio.js';
 import Search from './Search.js';
@@ -23,15 +23,28 @@ const portfolio = new Portfolio();
 const state = {};
 
 /**
- * Helpers
+ * UTILS
  */
 function toNum(str) {
   return parseFloat(str.replace(/[^0-9-.]/g, ''));
 }
 
 /**
+ * RESET BUTTON CONTROLLER
+ */
+elements.resetBtn.onclick = () => {
+  localStorage.clear();
+  alert('GAME RESET. PLEASE RELOAD THE PAGE ⚠️⚠️⚠️');
+};
+
+/**
  * SEARCH FORM CONTROLLER
  */
+elements.searchForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  handleSearch();
+});
+
 async function handleSearch() {
   const query = elements.searchField.value;
 
@@ -47,12 +60,6 @@ async function handleSearch() {
     ui.displaySResults(state.search.results);
   }
 }
-
-elements.searchForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-  handleSearch();
-});
-
 /**
  * SEARCH RESULTS CONTROLLER
  */
@@ -72,18 +79,7 @@ async function handleStockData(symbol) {
 
     // console.log(state.stock);
     ui.showFavBtn();
-    /*
-    if (favorite.favStocks.length > 0) {
-      // Check whether the current stock is already on the list
-      if (favorite.favStocks.some((item) => item === state.symbol)) {
-        console.log('already added');
-        ui.hideFavBtn();
-      } else ui.showFavBtn();
-    } else ui.showFavBtn();
-    */
-
     ui.showTrendsBtn();
-    // ui.clearSearchField();
     ui.updateStockInfo(state.stock);
     ui.showBuySellBtns();
 
@@ -151,11 +147,20 @@ elements.favList.addEventListener('click', (e) => {
 });
 
 /**
+ * INVESTMENT LIST CONTROLLER
+ */
+elements.portfolioItems.addEventListener('click', (e) => {
+  const symbol = e.target.innerText;
+  handleStockData(symbol);
+});
+
+/**
  * BUY BUTTON (HOMEPAGE) CONTROLLER
  */
 elements.buyBtn.addEventListener('click', (e) => {
   e.preventDefault();
-  ui.updateTransModal(state.stock);
+  const totalQuantity = portfolio.getTotalStockQuantity(state.stock.symbol);
+  ui.updateTransModal(state.stock, 'buy', totalQuantity);
   elements.executeOrder.onclick = handleBuyStock;
 });
 
@@ -171,7 +176,8 @@ function handleBuyStock() {
     );
     // console.log(state.boughtStock);
     portfolio.addToPortfolio(state.boughtStock);
-    portfolio.calcCash(state.boughtStock);
+    portfolio.addToList(state.boughtStock.symbol);
+    portfolio.calcCash(state.boughtStock, 'bought');
     portfolio.calcBalance();
 
     ui.updateStickyInfo(portfolio);
@@ -179,7 +185,7 @@ function handleBuyStock() {
     ui.addHistory('bought', state.boughtStock);
     ui.clearQuantity();
   } else {
-    alert('Insufficient funds. Please deposit more cash');
+    alert('Insufficient funds. Please deposit more cash 💰💰💰');
   }
   $('#transaction').modal('hide');
 }
@@ -195,55 +201,40 @@ elements.quantity.addEventListener('keyup', (e) => {
  */
 elements.sellBtn.addEventListener('click', (e) => {
   e.preventDefault();
-  ui.updateTransModal(state.stock);
+  const totalQuantity = portfolio.getTotalStockQuantity(state.stock.symbol);
+  ui.updateTransModal(state.stock, 'sell', totalQuantity);
   elements.executeOrder.onclick = handleSellStock;
 });
 
 function handleSellStock() {
   // Check whether user owns the current stock
   const result = portfolio.hasOwnStock(state.stock.symbol);
+  const totalQuantity = portfolio.getTotalStockQuantity(state.stock.symbol);
+
   if (result !== undefined) {
-    if (result.quantity <= elements.quantity.value) {
-      portfolio.removeStock(state.stock.symbol);
-      state.boughtStock = new BoughtStock(
-        state.stock.symbol,
-        result.boughtAt,
+    console.log(totalQuantity);
+    if (elements.quantity.value <= totalQuantity) {
+      state.soldStock = new SoldStock(
+        elements.stockChoice.value,
+        state.stock.marketPrice,
         elements.quantity.value
       );
-      portfolio.addToPortfolio(state.boughtStock);
 
-      portfolio.sellStock(state.stock.symbol, toNum(elements.totalCost.value));
+      portfolio.addSoldStock(state.soldStock);
+      portfolio.calcCash(state.soldStock, 'sold');
+      portfolio.calcBalance();
+      console.log(state.soldStock);
 
-      portfolio.editPortfolio();
-      portfolio.addToLStorage();
-
-      ui.updateStickyInfo(portfolio);
       ui.updatePortfolioInfo(portfolio);
-      ui.addHistory('sold', state.boughtStock);
+      ui.updateStickyInfo(portfolio);
+      ui.addHistory('sold', state.soldStock);
       ui.clearQuantity();
     } else {
-      alert(`Insufficient quantity to sell. Please decrease it`);
-      // ui.showAlertModal();
+      alert(`Insufficient stock quantity to execute the sell order ❌❌❌`);
     }
   } else {
-    alert(`Oops! You don't own this stock`);
-    // TODO
-    // ui.showAlertModal();
+    alert(`Oops! You don't own this stock 🤡🤡🤡`);
   }
-  /*
-    state.boughtStock = new BoughtStock(
-      state.stock.symbol,
-      state.stock.marketPrice,
-      elements.quantity.value
-    );
-    // console.log(state.boughtStock);
-    portfolio.addToPortfolio(state.boughtStock);
-    portfolio.calcCash(state.boughtStock);
-    portfolio.calcBalance();
-
-    ui.updateStickyInfo(portfolio.cash, portfolio.balance);
-  */
-  // ui.addHistory('sold', state.boughtStock);
   ui.clearQuantity();
   $('#transaction').modal('hide');
 }
@@ -251,41 +242,31 @@ function handleSellStock() {
 /**
  * GLOBAL EVENTS CONTROLLER
  */
-/*
-window.onload = () => {
-  // Check favStocks available from localStorage
-  // favorite.checkLStorage();
-  
-  if (favorite.favStocks.length > 1) {
-    favorite.favStocks.forEach((symbol) => {
-      ui.addToFavList(symbol);
-      // state.stock = new Stock(symbol);
-      // state.stock.getData();
-      // state.stock.calcChange();
-      // console.log(state.stock);
-      // ui.addToFavorite(state.stock.symbol, state.stock.change);
-      // const data = stock.getData(symbol);
-      // data.then((data) => console.log(data));
+portfolio.checkLStorage();
+if (portfolio.stocks.length > 0) {
+  portfolio.calcBalance();
+
+  portfolio.stocks.forEach((transaction) => {
+    ui.addHistory('bought', transaction);
+  });
+
+  if (portfolio.soldStocks.length > 0) {
+    portfolio.soldStocks.forEach((transaction) => {
+      ui.addHistory('sold', transaction);
     });
-    // if (state.favStocks != false) {
-    //   state.favStocks.forEach((symbol) => {
-    //     const data = stock.getData(symbol);
-    //     data.then((data) => {
-    //       const change = stock.calcChange(data);
-    //       ui.addToFavorite(symbol, change);
-    //     });
-    //   });
-  } else {
-    ui.showEmptyFavorite();
   }
 
-  portfolio.checkLStorage();
-  ui.updateStickyInfo(portfolio);
-  ui.updatePortfolioInfo(portfolio);
-};
-*/
+  const list = portfolio.getListFromLS();
+  if (list.length > 0) {
+    list.forEach((stock) => {
+      ui.addPortfolioItem(stock);
+    });
+  }
+} else {
+  portfolio.initBalance();
+  portfolio.addToLStorage();
+}
 
-portfolio.checkLStorage();
 // FIXME
 // console.log(portfolio.stocks);
 // if (portfolio.stocks.length > 0) {

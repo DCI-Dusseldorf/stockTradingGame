@@ -7,10 +7,12 @@ export const elements = {
   trendsBtn: document.getElementById('trendsBtn'),
   favList: document.getElementById('favList'),
   portfolioInfo: document.getElementById('portfolioInfo'),
-  estCost: document.getElementById('estCost'),
+  portfolioItems: document.getElementById('portfolioItems'),
   trendsModal: document.querySelector('#trendsModal .modal-body'),
   transactionModal: document.getElementById('transactionModal'),
+  transactionType: document.getElementById('transactionType'),
   trendsBtn: document.getElementById('trendsBtn'),
+  stockChoice: document.getElementById('stockChoice'),
   marketPrice: document.getElementById('marketPrice'),
   quantity: document.getElementById('quantity'),
   totalCost: document.getElementById('totalCost'),
@@ -21,7 +23,9 @@ export const elements = {
   executeOrder: document.getElementById('executeOrder'),
   buyBtn: document.getElementById('buyBtn'),
   sellBtn: document.getElementById('sellBtn'),
+  resetBtn: document.getElementById('resetBtn'),
   history: document.getElementById('transactionHistory'),
+  historyCredit: document.getElementById('transactionHistoryCredit'),
   balance: document.getElementById('balance'),
   cash: document.getElementById('cash'),
 };
@@ -169,7 +173,18 @@ export default class UI {
     ).toLocaleString()}`;
   }
 
-  updateTransModal(stock) {
+  updateTransModal(stock, type, totalQuantity = 0) {
+    // elements.stockOptions.innerHTML = `<option>${stock.symbol}</option>`;
+    switch (type) {
+      case 'buy':
+        elements.transactionType.innerText = 'Review Buy Order';
+        break;
+      case 'sell':
+        elements.transactionType.innerText = 'Review Sell Order';
+        break;
+    }
+    elements.stockChoice.previousElementSibling.innerHTML = `Symbol - Currently ${totalQuantity} Shares Owned`;
+    elements.stockChoice.value = `${stock.symbol}`;
     elements.marketPrice.value = `${stock.marketPrice}`;
   }
 
@@ -184,7 +199,6 @@ export default class UI {
     elements.totalCost.value = '';
   }
 
-  // TODO: transaction date?
   addHistory(type, stock) {
     let markup = '';
     if (type === 'bought') {
@@ -197,9 +211,9 @@ export default class UI {
             <h6 class="mb-0 d-flex align-items-center">
               <span>${stock.symbol}</span>
             </h6>
-            <p class="text-gray"><b>${
-              stock.quantity
-            } Shares</b> bought on ${stock.time.toUTCString()}</p>
+            <p class="text-gray"><b>${stock.quantity} Shares</b> bought on ${
+        stock.time
+      }</p>
           </div>
         </div>
         <div class="right ml-5 ml-sm-0 pl-3 pl-sm-0 text-red">
@@ -207,6 +221,7 @@ export default class UI {
         </div>
       </div>
       `;
+      elements.history.insertAdjacentHTML('afterbegin', markup);
     } else {
       markup = `
       <div
@@ -217,18 +232,18 @@ export default class UI {
             <h6 class="mb-0 d-flex align-items-center">
               <span>${stock.symbol}</span>
             </h6>
-            <p class="text-gray"><b>${
-              stock.quantity
-            } Shares</b> sold on ${stock.time.toUTCString()}</p>
+            <p class="text-gray"><b>${stock.quantity} Shares</b> sold on ${
+        stock.time
+      }</p>
           </div>
         </div>
         <div class="right ml-5 ml-sm-0 pl-3 pl-sm-0 text-green">
-          <h5>+$${stock.cost.toLocaleString()}</h5>
+          <h5>+$${stock.earn.toLocaleString()}</h5>
         </div>
       </div>
       `;
+      elements.historyCredit.insertAdjacentHTML('afterbegin', markup);
     }
-    elements.history.insertAdjacentHTML('afterbegin', markup);
   }
 
   showAlertModal() {
@@ -238,5 +253,10 @@ export default class UI {
   addToFavList(symbol) {
     const markup = `<button class="btn btn-sm btn-outline-primary mb-2 mr-2">${symbol}</button>`;
     elements.favList.insertAdjacentHTML('afterbegin', markup);
+  }
+
+  addPortfolioItem(symbol) {
+    const markup = `<button class="btn btn-sm btn-dark mb-2 mr-2">${symbol}</button>`;
+    elements.portfolioItems.insertAdjacentHTML('beforeend', markup);
   }
 }
