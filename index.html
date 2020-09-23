@@ -544,35 +544,6 @@
     <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="vendor/jquery.cookie/jquery.cookie.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-
- 
-  <script>
-     {
-    key = "btfnren48v6rl6gbns40";
-    time = "";
-
-    constructor(symbol){
-        this.symbol = symbol;
-         this.key = key; 
-    }
-}
-
-    async data1 () {
-        try{
-            const url = `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=M&from=1572651390&to=1572910590&token=${key}`;
-            const response = await fetch(url);
-            const data = await response.json();
-            const charData = [];
-            for (let i = 0; i < data.t.length;i++) {
-                chartData.push([data.t[i] * 1000,data.c[i]]);
-            }
-            return chartData;
-        }catch (error) {
-            console.log(error);
-        }
-        
-                  
-             
-        }
-       
-  </script>
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>
