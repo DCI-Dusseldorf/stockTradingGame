@@ -1,6 +1,7 @@
 import FinnHubService from "./api/FinnHubService.js";
 import StockProxy from "./proxy/StockProxy.js";
 import Chart from "./Chart.js";
+import Search from "./Search.js";
 
 let service = new StockProxy(new FinnHubService());
 // if we want to use web service directly -> let service = new FinnHubService();
