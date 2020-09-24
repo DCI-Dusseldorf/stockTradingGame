@@ -35,7 +35,8 @@ export default class Search {
 function renderSearch(bestMatches) {
   results.innerHTML = "";
   bestMatches.forEach((stock) => {
-    const markup = `<p><b>${stock["1. symbol"]}</b> ${stock["2. name"]}</p>`;
+    const markup = `<a href= #${stock["1. symbol"]} class = "list-group-item list-group-item-action bg-hover-gradient-blue" ><b>${stock["1. symbol"]}</b> ${stock["2. name"]} </a>`;
+
     results.insertAdjacentHTML("beforeend", markup);
   });
 }
