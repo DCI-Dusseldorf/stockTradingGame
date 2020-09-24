@@ -1,11 +1,11 @@
-class MockFinnHubService {
-  async getData(companyName, timeFrom, timeTo) {
-    companyName = "Mock Company";
+export default class MockData {
+  static async getData() {
+    let companyName = "Mock Company";
     let dataSet = this.getMockData();
     return { companyName, dataSet };
   }
 
-  getMockData() {
+  static getMockData() {
     return [
       [1537191000000, 54.47],
       [1537277400000, 54.56],

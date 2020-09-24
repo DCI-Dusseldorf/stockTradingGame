@@ -1,6 +1,8 @@
-class Cache {
+export default class Cache {
   addCacheItem(key, data) {
-    localStorage.setItem(key, JSON.stringify(data));
+    data.then((d) => {
+      localStorage.setItem(key, JSON.stringify(d));
+    });
   }
 
   getCacheItem(key) {

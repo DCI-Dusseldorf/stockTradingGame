@@ -1,7 +1,9 @@
-class FinnHubService {
+import Config from '../Config.js';
+
+export default class FinnHubService {
   #token = String;
   constructor() {
-    this.token = config.TOKEN;
+    this.token = Config.TOKEN;
   }
   async getData(companyName, timeFrom, timeTo) {
     let url =
