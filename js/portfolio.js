@@ -1,3 +1,14 @@
+if (!localStorage.myPortfolio) {
+  localStorage.setItem("myPortfolio", "[]");
+}
+
+if (!localStorage.cash) {
+  localStorage.setItem("cash", 1000000);
+}
+if (!localStorage.PortFolioValue) {
+  localStorage.setItem("PortFolioValue", 1000000);
+}
+
 // Class to get data from Finnhub
 export class StockData {
   key = "btgepcv48v6thhaqa2lg";
@@ -74,14 +85,17 @@ export class Portfolio {
   }
 
   computePortfValue() {
-    let portfolioValue = 0;
+    let portfolioValue = this.cash;
     const portfQuantity = this.computeQuantity();
 
-    Object.keys(portfQuantity).forEach(async (symbol) => {
+    Object.keys(portfQuantity).forEach(async (symbol, index) => {
       const currentPrice = await stock.getCurrentPrice(symbol);
       portfolioValue += portfQuantity[symbol] * currentPrice;
-      localStorage.setItem("PortFolioValue", portfolioValue);
+      if (index == Object.keys(portfQuantity).length - 1) {
+        localStorage.setItem("PortFolioValue", portfolioValue);
+      }
     });
+
     return JSON.parse(localStorage.getItem("PortFolioValue"));
   }
   async executeBuy(symbol, quantity) {
