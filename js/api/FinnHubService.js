@@ -1,4 +1,4 @@
-import Config from '../Config.js';
+import Config from "../Config.js";
 
 export default class FinnHubService {
   #token = String;
@@ -17,11 +17,14 @@ export default class FinnHubService {
       this.token;
     const res = await fetch(url);
     const originalData = await res.json();
+    const marketPrice = originalData.c[originalData.c.length - 1].toFixed(2);
+
     let dataSet = this.convertChartData(originalData);
-    return { companyName, dataSet };
+    return { companyName, dataSet, marketPrice };
   }
 
   convertChartData(data) {
+    console.log(data);
     const chartData = [];
     for (let i = 0; i < data.t.length; i++) {
       chartData.push([data.t[i] * 1000, parseFloat(data.c[i].toFixed(2))]);

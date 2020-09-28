@@ -11,9 +11,13 @@ window.addEventListener(
   function () {
     const timeFrom = Date.parse("2020-01-01T00:00:00") / 1000;
     const timeTo = new Date().getTime();
-    let companyName = location.hash.slice(1);
-    service.getData(companyName, timeFrom, timeTo).then((data) => {
+    let companySymbol = location.hash.slice(1);
+    service.getData(companySymbol, timeFrom, timeTo).then((data) => {
       chart.renderChart(data);
+      const infoHeaders = document.querySelectorAll("#stockInfo h2");
+      infoHeaders[0].innerText = companySymbol;
+      infoHeaders[1].innerText = "$" + data.marketPrice;
+      infoHeaders[2].innerText = "";
     });
     $("#buyBtn").removeClass("d-none");
     $("#sellBtn").removeClass("d-none");
