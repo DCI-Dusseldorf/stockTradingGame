@@ -3,6 +3,13 @@ import StockProxy from "./proxy/StockProxy.js";
 import Chart from "./Chart.js";
 import Search from "./Search.js";
 
+let search = new Search();
+const searchForm = document.getElementById("searchForm");
+searchForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  search.handleSearch(document.getElementById("searchField").value);
+});
+
 let service = new StockProxy(new FinnHubService());
 let chart = new Chart();
 
