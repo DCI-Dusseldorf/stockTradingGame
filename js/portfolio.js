@@ -1,4 +1,11 @@
 // Class to get data from Finnhub
+if (!localStorage.myPortfolio) {
+  localStorage.setItem("myPortfolio", "[]");
+}
+
+if (!localStorage.cash) {
+  localStorage.setItem("cash", 1000000);
+}
 export class StockData {
   key = "btgepcv48v6thhaqa2lg";
   today = new Date().getTime();
@@ -74,14 +81,19 @@ export class Portfolio {
   }
 
   computePortfValue() {
-    let portfolioValue = 0;
+    let portfolioValue = this.cash;
     const portfQuantity = this.computeQuantity();
+
+    // THESE CODES ARE NOT WORKING--------------
 
     Object.keys(portfQuantity).forEach(async (symbol) => {
       const currentPrice = await stock.getCurrentPrice(symbol);
       portfolioValue += portfQuantity[symbol] * currentPrice;
-      localStorage.setItem("PortFolioValue", portfolioValue);
     });
+    localStorage.setItem("PortFolioValue", portfolioValue);
+
+    console.log(portfolioValue);
+
     return JSON.parse(localStorage.getItem("PortFolioValue"));
   }
   async executeBuy(symbol, quantity) {
