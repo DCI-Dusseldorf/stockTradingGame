@@ -1,15 +1,13 @@
-import AlphaVantageService from "./api/AlphaVantageService.js";
-
 const results = document.getElementById("chart-container");
 
 export default class Search {
-  alphaVantageService;
-  constructor() {
-    this.alphaVantageService = new AlphaVantageService();
+  searchWebService;
+  constructor(searchWebService) {
+    this.searchWebService = searchWebService;
   }
   async handleSearch(query) {
     if (query) {
-      this.renderSearch(await this.alphaVantageService.getData(query));
+      this.renderSearch(await this.searchWebService.getData(query));
     }
   }
 

@@ -1,8 +1,9 @@
-export default class MockData {
+export default class StockMockData {
   static async getData() {
     let companyName = "Mock Company";
     let dataSet = this.getMockData();
-    return { companyName, dataSet };
+    const marketPrice = 118.95;
+    return { companyName, dataSet, marketPrice };
   }
 
   static getMockData() {
