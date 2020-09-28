@@ -1,7 +1,24 @@
 // Class to get data from Finnhub
+
+if (!localStorage.myPortfolio) {
+  localStorage.setItem("myPortfolio", "[]");
+}
+
+if (!localStorage.cash) {
+  localStorage.setItem("cash", 1000000);
+}
+
+
+
+
+
 export class StockData {
   key = "btgepcv48v6thhaqa2lg";
   today = new Date().getTime();
+
+
+
+
 
   async getData(symbol) {
     try {
