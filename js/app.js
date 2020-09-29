@@ -6,7 +6,7 @@ import Chart from "./Chart.js";
 import Search from "./Search.js";
 import { Portfolio } from "./portfolio.js";
 
-let searchWebService = new SearchProxy( new AlphaVantageService());
+let searchWebService = new SearchProxy(new AlphaVantageService());
 let stockWebService = new StockProxy(new FinnHubService());
 let search = new Search(searchWebService);
 let PORTFOLIO = new Portfolio(stockWebService);
@@ -17,28 +17,29 @@ searchForm.addEventListener("submit", (e) => {
   search.handleSearch(document.getElementById("searchField").value);
 });
 
+function displayChart() {
+  if (location.hash.length < 2) return;
+  let companySymbol = location.hash.slice(1);
+  stockWebService.getData(companySymbol).then((data) => {
+    chart.renderChart(data);
+
+    infoHeaders[0].innerText = companySymbol;
+    infoHeaders[1].innerText = "$" + data.marketPrice;
+    infoHeaders[2].innerText = "";
+  });
+  $("#buyBtn").removeClass("d-none");
+  $("#sellBtn").removeClass("d-none");
+  $("#trendsBtn").removeClass("d-none");
+  $("#favoriteBtn").removeClass("d-none");
+}
+
 let chart = new Chart();
 const infoHeaders = document.querySelectorAll("#stockInfo h2");
-window.addEventListener(
-  "hashchange",
-  function () {
-    let companySymbol = location.hash.slice(1);
-    stockWebService.getData(companySymbol).then((data) => {
-      chart.renderChart(data);
+window.addEventListener("hashchange", displayChart, false);
 
-      infoHeaders[0].innerText = companySymbol;
-      infoHeaders[1].innerText = "$" + data.marketPrice;
-      infoHeaders[2].innerText = "";
-    });
-    $("#buyBtn").removeClass("d-none");
-    $("#sellBtn").removeClass("d-none");
-    $("#trendsBtn").removeClass("d-none");
-    $("#favoriteBtn").removeClass("d-none");
-  },
-  false
-);
+if (window.location.hash.length > 0) displayChart();
 
-// Portfolio buy, sell and display
+// Portfolio buy, sell and display-----------------
 
 const symbol = document.getElementById("stockChoice");
 const quantity = document.getElementById("quantity");
@@ -57,6 +58,13 @@ buyBtn.addEventListener("click", (e) => {
     PORTFOLIO.executeBuy(symbol.value, quantity.value);
     display();
   });
+});
+//---ESTIMATED PRICE DISPLAY
+
+quantity.addEventListener("keyup", (e) => {
+  let amount = Number(e.target.value);
+  let cost = amount * Number(infoHeaders[1].innerText.substring(1));
+  document.querySelector("#totalCost").value = "$" + cost;
 });
 
 //Sell order execution
