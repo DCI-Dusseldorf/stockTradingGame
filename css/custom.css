@@ -5,3 +5,9 @@
   height: 300px;
   overflow: auto;
 }
+
+#transactionHistory {
+  width: 1044px;
+  height: 250px;
+  overflow: auto;
+}
