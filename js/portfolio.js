@@ -13,7 +13,7 @@ export class Portfolio {
   stocks = [];
   buyValue = Number;
   sellValue = Number;
-  #stockService;
+  stockService;
 
   constructor(stockWebService) {
     this.stockWebService = stockWebService;

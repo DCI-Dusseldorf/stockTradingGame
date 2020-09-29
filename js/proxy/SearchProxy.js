@@ -3,11 +3,11 @@ import Config from "../Config.js";
 import SearchMockData from "./mockdata/SearchMockData.js";
 
 export default class SearchProxy {
-  #service;
-  #cache;
-  #isCacheEnabled = Boolean;
-  #isMockEnabled = Boolean;
-  #cacheKey = String;
+  service;
+  cache;
+  isCacheEnabled = Boolean;
+  isMockEnabled = Boolean;
+  cacheKey = String;
   constructor(service) {
     this.service = service;
     this.cache = new Cache();
