@@ -52,7 +52,7 @@ export class Portfolio {
   }
 
   retrieveCash() {
-    return localStorage.getItem("cash");
+    return Number(localStorage.getItem("cash"));
   }
 
   setCash(cash) {
@@ -80,22 +80,26 @@ export class Portfolio {
     localStorage.setItem("myPortfolio", JSON.stringify(this.stocks));
   }
 
-  computePortfValue() {
-    let portfolioValue = this.cash;
-    const portfQuantity = this.computeQuantity();
+  async computePortfValue() {
+    let   portfolioValue = this.retrieveCash();
+    const  portfQuantity = this.computeQuantity();
+    const        symbols = Object.keys(portfQuantity);
 
     // THESE CODES ARE NOT WORKING--------------
-
-    Object.keys(portfQuantity).forEach(async (symbol) => {
+    const promises = symbols.map( async (symbol)=> {
       const currentPrice = await stock.getCurrentPrice(symbol);
       portfolioValue += portfQuantity[symbol] * currentPrice;
     });
+
+    await Promise.all( promises );
+
     localStorage.setItem("PortFolioValue", portfolioValue);
 
     console.log(portfolioValue);
 
-    return JSON.parse(localStorage.getItem("PortFolioValue"));
+    return portfolioValue;
   }
+
   async executeBuy(symbol, quantity) {
     const buyPrice = await stock.getCurrentPrice(symbol);
     this.buyValue = buyPrice * quantity;
@@ -108,7 +112,7 @@ export class Portfolio {
     } else {
       alert("Insufficient balance to execute Buy order");
     }
-    this.computePortfValue();
+    await this.computePortfValue();
   }
 
   async executeSell(symbol, quantity) {
@@ -124,6 +128,6 @@ export class Portfolio {
     } else {
       alert("Insufficient quantity to execute Sell order");
     }
-    this.computePortfValue();
+    await this.computePortfValue();
   }
 }

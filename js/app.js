@@ -72,10 +72,13 @@ const PORTFDISPLAY = document.querySelectorAll("#balance");
 const CASHDISPLAY = document.querySelectorAll("#cash");
 
 function display() {
-  console.log(PORTFOLIO.computePortfValue().toFixed(2));
+  //console.log(PORTFOLIO.computePortfValue().toFixed(2));
 
-  PORTFDISPLAY.forEach((element) => {
-    element.innerHTML = PORTFOLIO.computePortfValue().toFixed(2);
+  PORTFOLIO.computePortfValue()
+  .then( value => {
+    PORTFDISPLAY.forEach( element => {
+      element.innerHTML = value.toFixed(2);
+    });
   });
   CASHDISPLAY.forEach((element) => {
     element.innerHTML = JSON.parse(PORTFOLIO.retrieveCash()).toFixed(2);
@@ -103,4 +106,5 @@ function display() {
     $("#portfolioItems").html(boughtStocks);
   });
 }
+
 display();
