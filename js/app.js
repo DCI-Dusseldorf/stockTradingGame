@@ -47,6 +47,8 @@ const btnExecute = document.getElementById("executeOrder");
 //Buy order execution
 const buyBtn = document.getElementById("buyBtn");
 buyBtn.addEventListener("click", (e) => {
+  transactionType.innerText = "Review Buying Order";
+
   symbol.value = location.hash.slice(1);
   btnExecute.addEventListener("click", (e) => {
     e.preventDefault();
@@ -59,6 +61,8 @@ buyBtn.addEventListener("click", (e) => {
 //Sell order execution
 const sellBtn = document.getElementById("sellBtn");
 sellBtn.addEventListener("click", (e) => {
+  transactionType.innerText = "Review Selling Order";
+
   symbol.value = location.hash.slice(1);
   btnExecute.addEventListener("click", (e) => {
     e.preventDefault();
