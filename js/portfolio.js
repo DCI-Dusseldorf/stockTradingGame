@@ -81,22 +81,18 @@ export class Portfolio {
   }
 
   async computePortfValue() {
-    let   portfolioValue = this.retrieveCash();
-    const  portfQuantity = this.computeQuantity();
-    const        symbols = Object.keys(portfQuantity);
+    let portfolioValue = this.retrieveCash();
+    const portfQuantity = this.computeQuantity();
+    const symbols = Object.keys(portfQuantity);
 
-    // THESE CODES ARE NOT WORKING--------------
-    const promises = symbols.map( async (symbol)=> {
+    const promises = symbols.map(async (symbol) => {
       const currentPrice = await stock.getCurrentPrice(symbol);
       portfolioValue += portfQuantity[symbol] * currentPrice;
     });
 
-    await Promise.all( promises );
+    await Promise.all(promises);
 
     localStorage.setItem("PortFolioValue", portfolioValue);
-
-    console.log(portfolioValue);
-
     return portfolioValue;
   }
 
