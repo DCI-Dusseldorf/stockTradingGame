@@ -6,31 +6,6 @@ if (!localStorage.myPortfolio) {
 if (!localStorage.cash) {
   localStorage.setItem("cash", 1000000);
 }
-export class StockData {
-  key = "btgepcv48v6thhaqa2lg";
-  today = new Date().getTime();
-
-  async getData(symbol) {
-    try {
-      const url1 = `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=D&from=1577833200&to=${this.today}&token=${this.key}`;
-      const response = await fetch(url1);
-      const data = await response.json();
-      const chartData = [];
-      for (let i = 0; i < data.t.length; i++) {
-        chartData.push([data.t[i] * 1000, data.c[i]]);
-      }
-      return chartData;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async getCurrentPrice(symbol) {
-    return await this.getData(symbol).then((data) => data.pop()[1]);
-  }
-}
-let stock = new StockData();
-//Class to Buy or Sell stocks
 
 // class to include in the portfolio
 export class Portfolio {
@@ -38,8 +13,10 @@ export class Portfolio {
   stocks = [];
   buyValue = Number;
   sellValue = Number;
+  #stockService;
 
-  constructor() {
+  constructor(stockWebService) {
+    this.stockWebService = stockWebService;
     try {
       if (localStorage.getItem("myPortfolio")) {
         this.stocks = JSON.parse(localStorage.getItem("myPortfolio"));
@@ -86,7 +63,7 @@ export class Portfolio {
     const symbols = Object.keys(portfQuantity);
 
     const promises = symbols.map(async (symbol) => {
-      const currentPrice = await stock.getCurrentPrice(symbol);
+      const currentPrice = await this.getCurrentPrice(symbol);
       portfolioValue += portfQuantity[symbol] * currentPrice;
     });
 
@@ -97,7 +74,7 @@ export class Portfolio {
   }
 
   async executeBuy(symbol, quantity) {
-    const buyPrice = await stock.getCurrentPrice(symbol);
+    const buyPrice = await this.getCurrentPrice(symbol);
     this.buyValue = buyPrice * quantity;
     let cash = this.retrieveCash();
     if (this.buyValue < cash) {
@@ -112,7 +89,7 @@ export class Portfolio {
   }
 
   async executeSell(symbol, quantity) {
-    const sellPrice = await stock.getCurrentPrice(symbol);
+    const sellPrice = await this.getCurrentPrice(symbol);
     this.sellValue = sellPrice * quantity;
     let cash = JSON.parse(this.retrieveCash());
     const portfQuantity = this.computeQuantity();
@@ -125,5 +102,11 @@ export class Portfolio {
       alert("Insufficient quantity to execute Sell order");
     }
     await this.computePortfValue();
+  }
+
+  getCurrentPrice(symbol) {
+    return this.stockWebService.getData(symbol).then((data) => {
+      return data["marketPrice"];
+    });
   }
 }

@@ -9,12 +9,12 @@ export default class Chart {
       },
 
       title: {
-        text: data["companyName"],
+        text: data["companySymbol"],
       },
 
       series: [
         {
-          name: data["companyName"],
+          name: data["companySymbol"],
           data: data["dataSet"],
           tooltip: {
             valueDecimals: 2,

@@ -4,12 +4,12 @@ import AlphaVantageService from "./api/AlphaVantageService.js";
 import SearchProxy from "./proxy/SearchProxy.js";
 import Chart from "./Chart.js";
 import Search from "./Search.js";
-import { StockData, Portfolio } from "./portfolio.js";
+import { Portfolio } from "./portfolio.js";
 
-let searchWebService = new SearchProxy(new AlphaVantageService());
+let searchWebService = new SearchProxy( new AlphaVantageService());
+let stockWebService = new StockProxy(new FinnHubService());
 let search = new Search(searchWebService);
-let PORTFOLIO = new Portfolio();
-let stock = new StockData();
+let PORTFOLIO = new Portfolio(stockWebService);
 
 const searchForm = document.getElementById("searchForm");
 searchForm.addEventListener("submit", (e) => {
@@ -17,16 +17,13 @@ searchForm.addEventListener("submit", (e) => {
   search.handleSearch(document.getElementById("searchField").value);
 });
 
-let service = new StockProxy(new FinnHubService());
 let chart = new Chart();
 const infoHeaders = document.querySelectorAll("#stockInfo h2");
 window.addEventListener(
   "hashchange",
   function () {
-    const timeFrom = Date.parse("2020-01-01T00:00:00") / 1000;
-    const timeTo = new Date().getTime();
     let companySymbol = location.hash.slice(1);
-    service.getData(companySymbol, timeFrom, timeTo).then((data) => {
+    stockWebService.getData(companySymbol).then((data) => {
       chart.renderChart(data);
 
       infoHeaders[0].innerText = companySymbol;
@@ -95,8 +92,7 @@ function display() {
   let boughtStocks = "";
 
   Object.keys(myStocks).forEach(async function (key) {
-    const stockValue = myStocks[key] * (await stock.getCurrentPrice(key));
-    //console.log(key, myStocks[key]);
+    const stockValue = myStocks[key] * (await PORTFOLIO.getCurrentPrice(key));
 
     boughtStocks += `<div
   class="a bg-white bg-hover-gradient-blue shadow roundy px-4 py-3 d-flex align-items-center justify-content-between mb-4"
