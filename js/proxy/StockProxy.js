@@ -42,7 +42,6 @@ export default class StockProxy {
 
   setCacheKey(company, timeFrom, timeTo) {
     let fixedTimeTo = this.setTimeToZeroMinSecMill(timeTo);
-    console.log(fixedTimeTo);
     return this.isMock
       ? "MOCK-STOCK-CACHE-KEY"
       : "STOCK-" + company + "-" + timeFrom + "-" + fixedTimeTo;
@@ -50,6 +49,7 @@ export default class StockProxy {
 
   setTimeToZeroMinSecMill(time) {
     const dateObject = new Date(time);
+    // time cache invalidation is 1 hour
     return dateObject.setMinutes(0, 0, 0);
   }
 }
