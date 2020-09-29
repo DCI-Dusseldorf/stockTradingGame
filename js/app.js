@@ -9,6 +9,7 @@ import { Portfolio } from "./portfolio.js";
 let searchWebService = new SearchProxy( new AlphaVantageService());
 let stockWebService = new StockProxy(new FinnHubService());
 let search = new Search(searchWebService);
+// TODO should be small  "portfolio"
 let PORTFOLIO = new Portfolio(stockWebService);
 
 const searchForm = document.getElementById("searchForm");
@@ -93,7 +94,7 @@ function display() {
 
   Object.keys(myStocks).forEach(async function (key) {
     const stockValue = myStocks[key] * (await PORTFOLIO.getCurrentPrice(key));
-
+// TODO should be rendered in portfolio 
     boughtStocks += `<div
   class="a bg-white bg-hover-gradient-blue shadow roundy px-4 py-3 d-flex align-items-center justify-content-between mb-4"
   >
@@ -111,4 +112,5 @@ function display() {
   });
 }
 
+// TODO should be executed in portfolio constructor
 display();

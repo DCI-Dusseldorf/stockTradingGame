@@ -41,6 +41,7 @@ export class Portfolio {
     let tempArray = [];
     this.stocks = JSON.parse(localStorage.getItem("myPortfolio"));
     this.stocks.forEach(([symbol, { buyPrice, quantity }], index) => {
+  // TODO Do we need tempArray ?
       tempArray = this.stocks[index];
       if (quantities[symbol]) {
         quantities[symbol] += parseInt(quantity);
