@@ -3,11 +3,11 @@ import Config from "../Config.js";
 import StockMockData from "./mockdata/StockMockData.js";
 
 export default class StockProxy {
-  #service;
-  #cache;
-  #isCache = Boolean;
-  #isMock = Boolean;
-  #cacheKey = String;
+  service;
+  cache;
+  isCache = Boolean;
+  isMock = Boolean;
+  cacheKey = String;
   constructor(service) {
     this.service = service;
     this.cache = new Cache();

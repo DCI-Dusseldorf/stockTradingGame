@@ -1,7 +1,7 @@
 import Config from "../Config.js";
 
 export default class AlphaVantageService {
-  #token = String;
+  token = String;
   constructor() {
     this.token = Config.ALPHA_VANtAGE_TOKEN;
   }
