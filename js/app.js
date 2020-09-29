@@ -1,10 +1,13 @@
 import FinnHubService from "./api/FinnHubService.js";
 import StockProxy from "./proxy/StockProxy.js";
+import AlphaVantageService from "./api/AlphaVantageService.js";
+import SearchProxy from "./proxy/SearchProxy.js";
 import Chart from "./Chart.js";
 import Search from "./Search.js";
 import { StockData, Portfolio } from "./portfolio.js";
 
-let search = new Search();
+let searchWebService = new SearchProxy( new AlphaVantageService());
+let search = new Search(searchWebService);
 let PORTFOLIO = new Portfolio();
 let stock = new StockData();
 
