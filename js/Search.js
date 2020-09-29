@@ -6,9 +6,9 @@ export default class Search {
     this.searchWebService = searchWebService;
   }
   async handleSearch(query) {
-    if (query) {
-      this.renderSearch(await this.searchWebService.getData(query));
-    }
+    if (!query) return;
+    this.renderSearch(await this.searchWebService.getData(query));
+    window.location.hash = "";
   }
 
   renderSearch(bestMatches) {
