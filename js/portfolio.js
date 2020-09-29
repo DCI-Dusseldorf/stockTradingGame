@@ -10,6 +10,13 @@ if (!localStorage.PortFolioValue) {
 }
 
 // Class to get data from Finnhub
+if (!localStorage.myPortfolio) {
+  localStorage.setItem("myPortfolio", "[]");
+}
+
+if (!localStorage.cash) {
+  localStorage.setItem("cash", 1000000);
+}
 export class StockData {
   key = "btgepcv48v6thhaqa2lg";
   today = new Date().getTime();
@@ -56,7 +63,7 @@ export class Portfolio {
   }
 
   retrieveCash() {
-    return localStorage.getItem("cash");
+    return Number(localStorage.getItem("cash"));
   }
 
   setCash(cash) {
@@ -84,20 +91,25 @@ export class Portfolio {
     localStorage.setItem("myPortfolio", JSON.stringify(this.stocks));
   }
 
-  computePortfValue() {
-    let portfolioValue = this.cash;
+  async computePortfValue() {
+    let portfolioValue = this.retrieveCash();
     const portfQuantity = this.computeQuantity();
+    const symbols = Object.keys(portfQuantity);
 
-    Object.keys(portfQuantity).forEach(async (symbol, index) => {
+    const promises = symbols.map(async (symbol) => {
       const currentPrice = await stock.getCurrentPrice(symbol);
       portfolioValue += portfQuantity[symbol] * currentPrice;
-      if (index == Object.keys(portfQuantity).length - 1) {
-        localStorage.setItem("PortFolioValue", portfolioValue);
-      }
     });
 
-    return JSON.parse(localStorage.getItem("PortFolioValue"));
+    await Promise.all(promises);
+
+    localStorage.setItem("PortFolioValue", portfolioValue);
+
+    console.log(portfolioValue);
+
+    return portfolioValue;
   }
+
   async executeBuy(symbol, quantity) {
     const buyPrice = await stock.getCurrentPrice(symbol);
     this.buyValue = buyPrice * quantity;
@@ -110,7 +122,7 @@ export class Portfolio {
     } else {
       alert("Insufficient balance to execute Buy order");
     }
-    this.computePortfValue();
+    await this.computePortfValue();
   }
 
   async executeSell(symbol, quantity) {
@@ -126,6 +138,6 @@ export class Portfolio {
     } else {
       alert("Insufficient quantity to execute Sell order");
     }
-    this.computePortfValue();
+    await this.computePortfValue();
   }
 }

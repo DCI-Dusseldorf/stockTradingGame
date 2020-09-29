@@ -1,10 +1,13 @@
 import FinnHubService from "./api/FinnHubService.js";
 import StockProxy from "./proxy/StockProxy.js";
+import AlphaVantageService from "./api/AlphaVantageService.js";
+import SearchProxy from "./proxy/SearchProxy.js";
 import Chart from "./Chart.js";
 import Search from "./Search.js";
 import { StockData, Portfolio } from "./portfolio.js";
 
-let search = new Search();
+let searchWebService = new SearchProxy(new AlphaVantageService());
+let search = new Search(searchWebService);
 let PORTFOLIO = new Portfolio();
 let stock = new StockData();
 
@@ -16,6 +19,7 @@ searchForm.addEventListener("submit", (e) => {
 
 let service = new StockProxy(new FinnHubService());
 let chart = new Chart();
+const infoHeaders = document.querySelectorAll("#stockInfo h2");
 
 window.addEventListener(
   "hashchange",
@@ -25,7 +29,6 @@ window.addEventListener(
     let companySymbol = location.hash.slice(1);
     service.getData(companySymbol, timeFrom, timeTo).then((data) => {
       chart.renderChart(data);
-      const infoHeaders = document.querySelectorAll("#stockInfo h2");
       infoHeaders[0].innerText = companySymbol;
       infoHeaders[1].innerText = "$" + data.marketPrice;
       infoHeaders[2].innerText = "";
@@ -47,10 +50,12 @@ const btnExecute = document.getElementById("executeOrder");
 //Buy order execution
 const buyBtn = document.getElementById("buyBtn");
 buyBtn.addEventListener("click", (e) => {
+  const marketPrice = infoHeaders[1].innerText;
+  document.querySelector("#marketPrice").value = marketPrice;
+  transactionType.innerText = "Review Buying Order";
   symbol.value = location.hash.slice(1);
   btnExecute.addEventListener("click", (e) => {
     e.preventDefault();
-    //const exec = new BuyOrSell();
     PORTFOLIO.executeBuy(symbol.value, quantity.value);
     display();
   });
@@ -59,10 +64,12 @@ buyBtn.addEventListener("click", (e) => {
 //Sell order execution
 const sellBtn = document.getElementById("sellBtn");
 sellBtn.addEventListener("click", (e) => {
+  transactionType.innerText = "Review Selling Order";
+  const marketPrice = infoHeaders[1].innerText;
+  document.querySelector("#marketPrice").value = marketPrice;
   symbol.value = location.hash.slice(1);
   btnExecute.addEventListener("click", (e) => {
     e.preventDefault();
-    //const exec = new BuyOrSell();
     PORTFOLIO.executeSell(symbol.value, quantity.value);
     display();
   });
@@ -72,10 +79,10 @@ const PORTFDISPLAY = document.querySelectorAll("#balance");
 const CASHDISPLAY = document.querySelectorAll("#cash");
 
 function display() {
-  console.log(PORTFOLIO.computePortfValue().toFixed(2));
-
-  PORTFDISPLAY.forEach((element) => {
-    element.innerHTML = PORTFOLIO.computePortfValue().toFixed(2);
+  PORTFOLIO.computePortfValue().then((value) => {
+    PORTFDISPLAY.forEach((element) => {
+      element.innerHTML = value.toFixed(2);
+    });
   });
   CASHDISPLAY.forEach((element) => {
     element.innerHTML = JSON.parse(PORTFOLIO.retrieveCash()).toFixed(2);
@@ -85,7 +92,6 @@ function display() {
 
   Object.keys(myStocks).forEach(async function (key) {
     const stockValue = myStocks[key] * (await stock.getCurrentPrice(key));
-    //console.log(key, myStocks[key]);
 
     boughtStocks += `<div
   class="a bg-white bg-hover-gradient-blue shadow roundy px-4 py-3 d-flex align-items-center justify-content-between mb-4"
@@ -103,4 +109,5 @@ function display() {
     $("#portfolioItems").html(boughtStocks);
   });
 }
+
 display();

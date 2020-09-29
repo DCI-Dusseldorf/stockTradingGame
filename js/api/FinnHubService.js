@@ -3,7 +3,7 @@ import Config from "../Config.js";
 export default class FinnHubService {
   #token = String;
   constructor() {
-    this.token = Config.TOKEN;
+    this.token = Config.FINN_HUB_TOKEN;
   }
   async getData(companyName, timeFrom, timeTo) {
     let url =
@@ -24,7 +24,6 @@ export default class FinnHubService {
   }
 
   convertChartData(data) {
-    console.log(data);
     const chartData = [];
     for (let i = 0; i < data.t.length; i++) {
       chartData.push([data.t[i] * 1000, parseFloat(data.c[i].toFixed(2))]);
