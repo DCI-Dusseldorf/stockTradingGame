@@ -38,10 +38,8 @@ export class Portfolio {
 
   computeQuantity() {
     const quantities = {};
-    let tempArray = [];
     this.stocks = JSON.parse(localStorage.getItem("myPortfolio"));
     this.stocks.forEach(([symbol, { buyPrice, quantity }], index) => {
-      tempArray = this.stocks[index];
       if (quantities[symbol]) {
         quantities[symbol] += parseInt(quantity);
       } else {

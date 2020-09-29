@@ -57,6 +57,7 @@ buyBtn.addEventListener("click", (e) => {
     //const exec = new BuyOrSell();
     PORTFOLIO.executeBuy(symbol.value, quantity.value);
     display();
+    $("#transaction").modal("hide");
   });
 });
 //---ESTIMATED PRICE DISPLAY
@@ -79,23 +80,30 @@ sellBtn.addEventListener("click", (e) => {
     //const exec = new BuyOrSell();
     PORTFOLIO.executeSell(symbol.value, quantity.value);
     display();
+    $("#transaction").modal("hide");
   });
 });
 
-const PORTFDISPLAY = document.querySelectorAll("#balance");
-const CASHDISPLAY = document.querySelectorAll("#cash");
+//const PORTFDISPLAY = document.querySelectorAll("#balance");
+//const CASHDISPLAY = document.querySelectorAll("#cash");
+const PORTFDISPLAY = document.querySelector("#balance");
+const CASHDISPLAY = document.querySelector("#cash");
 
 function display() {
   //console.log(PORTFOLIO.computePortfValue().toFixed(2));
 
+  // PORTFOLIO.computePortfValue().then((value) => {
+  //   PORTFDISPLAY.forEach((element) => {
+  //     element.innerHTML = value.toFixed(2);
+  //   });
+  // });
   PORTFOLIO.computePortfValue().then((value) => {
-    PORTFDISPLAY.forEach((element) => {
-      element.innerHTML = value.toFixed(2);
-    });
+    PORTFDISPLAY.innerHTML = value.toFixed(2);
   });
-  CASHDISPLAY.forEach((element) => {
-    element.innerHTML = JSON.parse(PORTFOLIO.retrieveCash()).toFixed(2);
-  });
+  // CASHDISPLAY.forEach((element) => {
+  //   element.innerHTML = JSON.parse(PORTFOLIO.retrieveCash()).toFixed(2);
+  // });
+  CASHDISPLAY.innerHTML = JSON.parse(PORTFOLIO.retrieveCash()).toFixed(2);
   let myStocks = PORTFOLIO.computeQuantity();
   let boughtStocks = "";
 
@@ -120,3 +128,41 @@ function display() {
 }
 
 display();
+
+function transactionHistory() {
+  const markup = `<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Symbol</th>
+      <th scope="col">Buy/Sell</th>
+      <th scope="col">Trx-Price</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>`;
+  $("#transactionHistory").html(markup);
+
+  const transaction = JSON.parse(localStorage.getItem("myPortfolio"));
+  let trnMarkup = "";
+  let trxType = "";
+  transaction.forEach(([symbol, { buyPrice, quantity }]) => {
+    if (quantity < 0) {
+      trxType = "Sell";
+    } else {
+      trxType = "Buy";
+    }
+    trnMarkup += `<tr>
+      <th scope="row">${symbol}</th>
+      <td>${trxType}</td>
+      <td>${Number(buyPrice).toFixed(2)}</td>
+      <td>${Math.abs(quantity)}</td>
+      <td>${Math.abs(buyPrice * quantity).toFixed(2)}</td>
+    </tr>`;
+
+    $("#transactionHistory tbody").html(trnMarkup);
+  });
+}
+transactionHistory();
