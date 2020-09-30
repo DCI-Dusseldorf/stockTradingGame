@@ -8,6 +8,17 @@
 
 #transactionHistory {
   width: 1044px;
-  height: 250px;
+}
+#transactionHistory thead th {
+  position: sticky;
+  top: -1px;
+  background-color: gray;
+}
+
+#transactionTable {
   overflow: auto;
+  height: 250px;
+  display: block;
+  position: relative;
+  width: 100%;
 }
