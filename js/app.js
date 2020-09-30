@@ -97,6 +97,9 @@ function display() {
   let myStocks = PORTFOLIO.computeQuantity();
   let boughtStocks = "";
 
+  // remove all items first
+  $("#portfolioItems").html('');
+
   Object.keys(myStocks).forEach(async function (key) {
     console.log(myStocks[key]);
     if (myStocks[key] !== 0) {
