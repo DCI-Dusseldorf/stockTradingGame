@@ -1,1 +1,24 @@
 /* your styles go here */
+
+#portfolioItems {
+  width: 328px;
+  height: 300px;
+  overflow: auto;
+}
+
+#transactionHistory {
+  width: 1044px;
+}
+#transactionHistory thead th {
+  position: sticky;
+  top: -1px;
+  background-color: gray;
+}
+
+#transactionTable {
+  overflow: auto;
+  height: 250px;
+  display: block;
+  position: relative;
+  width: 100%;
+}

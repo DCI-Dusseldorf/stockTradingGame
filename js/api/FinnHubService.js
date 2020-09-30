@@ -1,22 +1,30 @@
-class FinnHubService {
-  #token = String;
+import Config from "../Config.js";
+
+export default class FinnHubService {
+  token    = String;
+  timeFrom = String;
+  timeTo   = String;
   constructor() {
-    this.token = config.TOKEN;
+    this.token = Config.FINN_HUB_TOKEN;
+    this.timeFrom = Date.parse("2020-01-01T00:00:00") / 1000;
+    this.timeTo = new Date().getTime();
   }
-  async getData(companyName, timeFrom, timeTo) {
+  async getData(companySymbol) {
     let url =
       "https://finnhub.io/api/v1/stock/candle?symbol=" +
-      companyName +
+      companySymbol +
       "&resolution=D&from=" +
-      timeFrom +
+      this.timeFrom +
       "&to=" +
-      timeTo +
+      this.timeTo +
       "&token=" +
       this.token;
     const res = await fetch(url);
     const originalData = await res.json();
+    const marketPrice = originalData.c[originalData.c.length - 1].toFixed(2);
+
     let dataSet = this.convertChartData(originalData);
-    return { companyName, dataSet };
+    return { companySymbol, dataSet, marketPrice };
   }
 
   convertChartData(data) {
