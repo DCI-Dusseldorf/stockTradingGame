@@ -75,13 +75,15 @@ export class Portfolio {
     const buyPrice = await this.getCurrentPrice(symbol);
     this.buyValue = buyPrice * quantity;
     let cash = this.retrieveCash();
-    if (this.buyValue < cash) {
+    if (this.buyValue < cash && quantity > 0) {
       alert("Buy order executed successfully");
       this.addToPortfolio(symbol, buyPrice, quantity);
       cash = cash - this.buyValue;
       this.setCash(cash);
     } else {
-      alert("Insufficient balance to execute Buy order");
+      alert(
+        "Insufficient balance to execute Buy order or please enter a right quantity"
+      );
     }
     await this.computePortfValue();
   }
