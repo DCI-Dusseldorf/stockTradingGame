@@ -5,24 +5,27 @@ import StockMockData from "./mockdata/StockMockData.js";
 export default class StockProxy {
   service;
   cache;
-  isCache = Boolean;
-  isMock = Boolean;
+  timeFrom = String;
+  isCache  = Boolean;
+  isMock   = Boolean;
   cacheKey = String;
   constructor(service) {
     this.service = service;
     this.cache = new Cache();
     this.isCacheEnabled = Config.IS_CACHE_STOCK_ENABLED;
     this.isMock = Config.IS_MOCK_STOCK_ENABLED;
+    this.timeFrom = Date.parse("2020-01-01T00:00:00") / 1000;
   }
-  async getData(company, timeFrom, timeTo) {
-    this.cacheKey = this.setCacheKey(company, timeFrom, timeTo);
+  async getData(companySymbol) {
+    let timeTo = new Date().getTime();
+    this.cacheKey = this.setCacheKey(companySymbol, this.timeFrom, timeTo);
     let data = this.isCacheEnabled
       ? this.cache.getCacheItem(this.cacheKey)
       : null;
     data = this.isMock ? this.getMockData() : data;
 
     if (data == null) {
-      let dataPromise = this.service.getData(company, timeFrom, timeTo);
+      let dataPromise = this.service.getData(companySymbol, this.timeFrom, timeTo);
 
       if (this.isCacheEnabled) {
         this.cache.addCacheItem(this.cacheKey, dataPromise);
@@ -40,11 +43,11 @@ export default class StockProxy {
     return mockData;
   }
 
-  setCacheKey(company, timeFrom, timeTo) {
+  setCacheKey(companySymbol, timeFrom, timeTo) {
     let fixedTimeTo = this.setTimeToZeroMinSecMill(timeTo);
     return this.isMock
       ? "MOCK-STOCK-CACHE-KEY"
-      : "STOCK-" + company + "-" + timeFrom + "-" + fixedTimeTo;
+      : "STOCK-" + companySymbol + "-" + timeFrom + "-" + fixedTimeTo;
   }
 
   setTimeToZeroMinSecMill(time) {
