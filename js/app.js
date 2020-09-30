@@ -93,13 +93,16 @@ function display() {
   });
 
   CASHDISPLAY.innerHTML = JSON.parse(PORTFOLIO.retrieveCash()).toFixed(2);
+
   let myStocks = PORTFOLIO.computeQuantity();
   let boughtStocks = "";
 
   Object.keys(myStocks).forEach(async function (key) {
-    const stockValue = myStocks[key] * (await PORTFOLIO.getCurrentPrice(key));
+    console.log(myStocks[key]);
+    if (myStocks[key] !== 0) {
+      const stockValue = myStocks[key] * (await PORTFOLIO.getCurrentPrice(key));
 
-    boughtStocks += `<div
+      boughtStocks += `<div
   class="a bg-white bg-hover-gradient-blue shadow roundy px-4 py-3 d-flex align-items-center justify-content-between mb-4"
   >
   <div class="2 flex-grow-1 d-flex align-items-center">
@@ -112,7 +115,8 @@ function display() {
       ${stockValue.toFixed(2)}
   </div>
   </div>`;
-    $("#portfolioItems").html(boughtStocks);
+      $("#portfolioItems").html(boughtStocks);
+    }
   });
 }
 
@@ -123,7 +127,7 @@ function transactionHistory() {
       <thead>
         <tr>
           <th scope="col">Symbol</th>
-          <th scope="col">Buy/Sell</th>
+          <th scope="col">Bought/Sold</th>
           <th scope="col">Trx-Price</th>
           <th scope="col">Quantity</th>
           <th scope="col">Value</th>
@@ -138,9 +142,9 @@ function transactionHistory() {
   let trxType = "";
   transaction.forEach(([symbol, { buyPrice, quantity }]) => {
     if (quantity < 0) {
-      trxType = "Sell";
+      trxType = "Sold";
     } else {
-      trxType = "Buy";
+      trxType = "Bought";
     }
     trnMarkup += `<tr>
       <th scope="row">${symbol}</th>
