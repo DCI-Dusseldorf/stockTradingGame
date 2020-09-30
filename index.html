@@ -191,7 +191,7 @@
                         <div class="form-group">
                           <label for="quantity">Quantity</label>
                           <input
-                            type="text"
+                            type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
                             class="form-control"
                             placeholder="Enter quantity of shares to trade"
                             id="quantity"
@@ -285,13 +285,16 @@
                   <div class="card-header">
                     <div class="row">
                       <div class="col-12" id="portfolioInfo">
+                        <div class="bg-white bg-hover-gradient-blue shadow roundy px-4 py-3">
                         <h2 class="h5 text-uppercase text-gray-500">
                           Portfolio Value
                         </h2>
                         <h2 class="h4 text-uppercase" id="balance">$0</h2>
-                        
-                        <p class="text-uppercase text-gray-500 mt-5">Cash</p>
+                      </div>
+                      <div class="bg-white bg-hover-gradient-blue shadow roundy px-4 py-3 mt-3">
+                        <p class="text-uppercase text-gray-500">Cash</p>
                         <h5 class="h5 text-uppercase" id="cash">$0</h5>
+                      </div>
                         <!-- <button class="btn btn-sm btn-danger" id="resetBtn">
                           Reset
                         </button> -->
