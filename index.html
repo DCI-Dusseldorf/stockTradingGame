@@ -191,7 +191,7 @@
                         <div class="form-group">
                           <label for="quantity">Quantity</label>
                           <input
-                            type="text"
+                            type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
                             class="form-control"
                             placeholder="Enter quantity of shares to trade"
                             id="quantity"
