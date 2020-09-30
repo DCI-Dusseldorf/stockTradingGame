@@ -86,12 +86,26 @@ sellBtn.addEventListener("click", (e) => {
   const marketPrice = infoHeaders[1].innerText;
   document.querySelector("#marketPrice").value = marketPrice;
   symbol.value = location.hash.slice(1);
+  let myStocks = PORTFOLIO.computeQuantity();
+  if (myStocks.hasOwnProperty(symbol.value)) {
+    document.getElementById("label").innerText = `${symbol.value}-${
+      myStocks[symbol.value]
+    } Shares Owned `;
+  } else {
+    document.getElementById(
+      "label"
+    ).innerText = `${symbol.value}- 0 Share Owned `;
+  }
   btnExecute.onclick = async (e) => {
     e.preventDefault();
-    await PORTFOLIO.executeSell(symbol.value, quantity.value);
-    display();
-    transactionHistory();
-    $("#transaction").modal("hide");
+    if (Number(quantity.value) > 0) {
+      await PORTFOLIO.executeSell(symbol.value, quantity.value);
+      display();
+      transactionHistory();
+      $("#transaction").modal("hide");
+    } else {
+      alert("Please enter a positive quantity");
+    }
   };
 });
 
