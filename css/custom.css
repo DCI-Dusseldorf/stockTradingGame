@@ -7,12 +7,12 @@
 }
 
 #transactionHistory {
-  width: 1044px;
+  width: 100%;
 }
 #transactionHistory thead th {
   position: sticky;
   top: -1px;
-  background-color: gray;
+  background-color: rgba(184, 180, 179);
 }
 
 #transactionTable {
