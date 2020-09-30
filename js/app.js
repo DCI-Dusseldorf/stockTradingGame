@@ -133,19 +133,18 @@ display();
 
 function transactionHistory() {
   const markup = `<table class="table table-hover">
-  <thead>
-    <tr>
-      <th scope="col">Symbol</th>
-      <th scope="col">Buy/Sell</th>
-      <th scope="col">Trx-Price</th>
-      <th scope="col">Quantity</th>
-      <th scope="col">Value</th>
-    </tr>
-  </thead>
-  <tbody>
-  </tbody>
-</table>`;
-  $("#transactionHistory").html(markup);
+      <thead>
+        <tr>
+          <th scope="col">Symbol</th>
+          <th scope="col">Buy/Sell</th>
+          <th scope="col">Trx-Price</th>
+          <th scope="col">Quantity</th>
+          <th scope="col">Value</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>`;
+  $("#transactionTable").html(markup);
 
   const transaction = JSON.parse(localStorage.getItem("myPortfolio"));
   let trnMarkup = "";
@@ -164,7 +163,7 @@ function transactionHistory() {
       <td>${Math.abs(buyPrice * quantity).toFixed(2)}</td>
     </tr>`;
 
-    $("#transactionHistory tbody").html(trnMarkup);
+    $("#transactionTable tbody").html(trnMarkup);
   });
 }
 transactionHistory();
