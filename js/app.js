@@ -52,11 +52,12 @@ buyBtn.addEventListener("click", (e) => {
   const marketPrice = infoHeaders[1].innerText;
   document.querySelector("#marketPrice").value = marketPrice;
   symbol.value = location.hash.slice(1);
-  btnExecute.addEventListener("click", (e) => {
+  btnExecute.addEventListener("click", async (e) => {
     e.preventDefault();
     //const exec = new BuyOrSell();
-    PORTFOLIO.executeBuy(symbol.value, quantity.value);
+    await PORTFOLIO.executeBuy(symbol.value, quantity.value);
     display();
+    transactionHistory();
     $("#transaction").modal("hide");
   });
 });
@@ -75,11 +76,12 @@ sellBtn.addEventListener("click", (e) => {
   const marketPrice = infoHeaders[1].innerText;
   document.querySelector("#marketPrice").value = marketPrice;
   symbol.value = location.hash.slice(1);
-  btnExecute.addEventListener("click", (e) => {
+  btnExecute.addEventListener("click", async (e) => {
     e.preventDefault();
     //const exec = new BuyOrSell();
-    PORTFOLIO.executeSell(symbol.value, quantity.value);
+    await PORTFOLIO.executeSell(symbol.value, quantity.value);
     display();
+    transactionHistory();
     $("#transaction").modal("hide");
   });
 });
