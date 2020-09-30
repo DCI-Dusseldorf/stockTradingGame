@@ -54,7 +54,6 @@ buyBtn.addEventListener("click", (e) => {
   symbol.value = location.hash.slice(1);
   btnExecute.onclick = async (e) => {
     e.preventDefault();
-    //const exec = new BuyOrSell();
     await PORTFOLIO.executeBuy(symbol.value, quantity.value);
     display();
     transactionHistory();
@@ -72,13 +71,12 @@ quantity.addEventListener("keyup", (e) => {
 //Sell order execution
 const sellBtn = document.getElementById("sellBtn");
 sellBtn.addEventListener("click", (e) => {
-  transactionType.innerText = "Review Buying Order";
+  transactionType.innerText = "Review Selling Order";
   const marketPrice = infoHeaders[1].innerText;
   document.querySelector("#marketPrice").value = marketPrice;
   symbol.value = location.hash.slice(1);
   btnExecute.onclick = async (e) => {
     e.preventDefault();
-    //const exec = new BuyOrSell();
     await PORTFOLIO.executeSell(symbol.value, quantity.value);
     display();
     transactionHistory();
@@ -86,25 +84,14 @@ sellBtn.addEventListener("click", (e) => {
   };
 });
 
-//const PORTFDISPLAY = document.querySelectorAll("#balance");
-//const CASHDISPLAY = document.querySelectorAll("#cash");
 const PORTFDISPLAY = document.querySelector("#balance");
 const CASHDISPLAY = document.querySelector("#cash");
 
 function display() {
-  //console.log(PORTFOLIO.computePortfValue().toFixed(2));
-
-  // PORTFOLIO.computePortfValue().then((value) => {
-  //   PORTFDISPLAY.forEach((element) => {
-  //     element.innerHTML = value.toFixed(2);
-  //   });
-  // });
   PORTFOLIO.computePortfValue().then((value) => {
     PORTFDISPLAY.innerHTML = value.toFixed(2);
   });
-  // CASHDISPLAY.forEach((element) => {
-  //   element.innerHTML = JSON.parse(PORTFOLIO.retrieveCash()).toFixed(2);
-  // });
+
   CASHDISPLAY.innerHTML = JSON.parse(PORTFOLIO.retrieveCash()).toFixed(2);
   let myStocks = PORTFOLIO.computeQuantity();
   let boughtStocks = "";
