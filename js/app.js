@@ -65,7 +65,7 @@ buyBtn.addEventListener("click", (e) => {
 quantity.addEventListener("keyup", (e) => {
   let amount = Number(e.target.value);
   let cost = amount * Number(infoHeaders[1].innerText.substring(1));
-  document.querySelector("#totalCost").value = "$" + cost;
+  document.querySelector("#totalCost").value = "$" + cost.toFixed(2);
 });
 
 //Sell order execution
@@ -98,7 +98,7 @@ function display() {
   let boughtStocks = "";
 
   // remove all items first
-  $("#portfolioItems").html('');
+  $("#portfolioItems").html("");
 
   Object.keys(myStocks).forEach(async function (key) {
     console.log(myStocks[key]);
