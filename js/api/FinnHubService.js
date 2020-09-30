@@ -1,9 +1,9 @@
 import Config from "../Config.js";
 
 export default class FinnHubService {
-  token = String;
+  token    = String;
   timeFrom = String;
-  timeTo = String;
+  timeTo   = String;
   constructor() {
     this.token = Config.FINN_HUB_TOKEN;
     this.timeFrom = Date.parse("2020-01-01T00:00:00") / 1000;
