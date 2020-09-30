@@ -22,3 +22,11 @@
   position: relative;
   width: 100%;
 }
+
+#chartHeader {
+  background-color: #9191dc;
+}
+
+#stockInfo h2 {
+  color: white;
+}

@@ -10,6 +10,7 @@ let searchWebService = new SearchProxy(new AlphaVantageService());
 let stockWebService = new StockProxy(new FinnHubService());
 let search = new Search(searchWebService);
 let PORTFOLIO = new Portfolio(stockWebService);
+let myStocks = PORTFOLIO.computeQuantity();
 
 const searchForm = document.getElementById("searchForm");
 searchForm.addEventListener("submit", (e) => {
@@ -52,6 +53,12 @@ buyBtn.addEventListener("click", (e) => {
   const marketPrice = infoHeaders[1].innerText;
   document.querySelector("#marketPrice").value = marketPrice;
   symbol.value = location.hash.slice(1);
+
+  if (myStocks.hasOwnProperty(symbol.value)) {
+    document.getElementById("label").innerText = `${symbol.value}-${
+      myStocks[symbol.value]
+    } Shares Owned `;
+  }
   btnExecute.onclick = async (e) => {
     e.preventDefault();
     await PORTFOLIO.executeBuy(symbol.value, quantity.value);
@@ -65,7 +72,7 @@ buyBtn.addEventListener("click", (e) => {
 quantity.addEventListener("keyup", (e) => {
   let amount = Number(e.target.value);
   let cost = amount * Number(infoHeaders[1].innerText.substring(1));
-  document.querySelector("#totalCost").value = "$" + cost;
+  document.querySelector("#totalCost").value = "$" + cost.toFixed(2);
 });
 
 //Sell order execution
@@ -94,11 +101,10 @@ function display() {
 
   CASHDISPLAY.innerHTML = JSON.parse(PORTFOLIO.retrieveCash()).toFixed(2);
 
-  let myStocks = PORTFOLIO.computeQuantity();
   let boughtStocks = "";
 
   // remove all items first
-  $("#portfolioItems").html('');
+  $("#portfolioItems").html("");
 
   Object.keys(myStocks).forEach(async function (key) {
     console.log(myStocks[key]);
