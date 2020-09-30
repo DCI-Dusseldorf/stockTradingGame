@@ -52,14 +52,14 @@ buyBtn.addEventListener("click", (e) => {
   const marketPrice = infoHeaders[1].innerText;
   document.querySelector("#marketPrice").value = marketPrice;
   symbol.value = location.hash.slice(1);
-  btnExecute.addEventListener("click", async (e) => {
+  btnExecute.onclick = async (e) => {
     e.preventDefault();
     //const exec = new BuyOrSell();
     await PORTFOLIO.executeBuy(symbol.value, quantity.value);
     display();
     transactionHistory();
     $("#transaction").modal("hide");
-  });
+  };
 });
 //---ESTIMATED PRICE DISPLAY
 
@@ -72,18 +72,18 @@ quantity.addEventListener("keyup", (e) => {
 //Sell order execution
 const sellBtn = document.getElementById("sellBtn");
 sellBtn.addEventListener("click", (e) => {
-  transactionType.innerText = "Review Selling Order";
+  transactionType.innerText = "Review Buying Order";
   const marketPrice = infoHeaders[1].innerText;
   document.querySelector("#marketPrice").value = marketPrice;
   symbol.value = location.hash.slice(1);
-  btnExecute.addEventListener("click", async (e) => {
+  btnExecute.onclick = async (e) => {
     e.preventDefault();
     //const exec = new BuyOrSell();
     await PORTFOLIO.executeSell(symbol.value, quantity.value);
     display();
     transactionHistory();
     $("#transaction").modal("hide");
-  });
+  };
 });
 
 //const PORTFDISPLAY = document.querySelectorAll("#balance");
