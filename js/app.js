@@ -10,7 +10,6 @@ let searchWebService = new SearchProxy(new AlphaVantageService());
 let stockWebService = new StockProxy(new FinnHubService());
 let search = new Search(searchWebService);
 let PORTFOLIO = new Portfolio(stockWebService);
-let myStocks = PORTFOLIO.computeQuantity();
 
 const searchForm = document.getElementById("searchForm");
 searchForm.addEventListener("submit", (e) => {
@@ -54,10 +53,15 @@ buyBtn.addEventListener("click", (e) => {
   document.querySelector("#marketPrice").value = marketPrice;
   symbol.value = location.hash.slice(1);
 
+  let myStocks = PORTFOLIO.computeQuantity();
   if (myStocks.hasOwnProperty(symbol.value)) {
     document.getElementById("label").innerText = `${symbol.value}-${
       myStocks[symbol.value]
     } Shares Owned `;
+  } else {
+    document.getElementById(
+      "label"
+    ).innerText = `${symbol.value}- 0 Share Owned `;
   }
   btnExecute.onclick = async (e) => {
     e.preventDefault();
@@ -105,9 +109,9 @@ function display() {
 
   // remove all items first
   $("#portfolioItems").html("");
+  let myStocks = PORTFOLIO.computeQuantity();
 
   Object.keys(myStocks).forEach(async function (key) {
-    console.log(myStocks[key]);
     if (myStocks[key] !== 0) {
       const stockValue = myStocks[key] * (await PORTFOLIO.getCurrentPrice(key));
 
@@ -124,6 +128,7 @@ function display() {
       ${stockValue.toFixed(2)}
   </div>
   </div>`;
+      console.log(boughtStocks);
       $("#portfolioItems").html(boughtStocks);
     }
   });
