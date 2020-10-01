@@ -5,13 +5,26 @@ import SearchProxy from "./proxy/SearchProxy.js";
 import Chart from "./Chart.js";
 import Search from "./Search.js";
 import { Portfolio } from "./Portfolio.js";
+import Reset from "./Reset.js";
 
 let searchWebService = new SearchProxy(new AlphaVantageService());
 let stockWebService = new StockProxy(new FinnHubService());
 let search = new Search(searchWebService);
 let portfolio = new Portfolio(stockWebService);
+let chart = new Chart();
 
+const reset = new Reset(portfolio);
+const btnReset = document.getElementById("resetBtn");
+const symbol = document.getElementById("stockChoice");
+const quantity = document.getElementById("quantity");
+const btnExecute = document.getElementById("executeOrder");
+const infoHeaders = document.querySelectorAll("#stockInfo h2");
 const searchForm = document.getElementById("searchForm");
+const buyBtn = document.getElementById("buyBtn");
+const sellBtn = document.getElementById("sellBtn");
+const portfolioDisplay = document.querySelector("#balance");
+const cashdisplay = document.querySelector("#cash");
+
 searchForm.addEventListener("submit", (e) => {
   e.preventDefault();
   search.handleSearch(document.getElementById("searchField").value);
@@ -33,26 +46,18 @@ function displayChart() {
   $("#favoriteBtn").removeClass("d-none");
 }
 
-let chart = new Chart();
-const infoHeaders = document.querySelectorAll("#stockInfo h2");
 window.addEventListener("hashchange", displayChart, false);
 
 if (window.location.hash.length > 0) displayChart();
 
 // Portfolio buy, sell and display-----------------
-
-const symbol = document.getElementById("stockChoice");
-const quantity = document.getElementById("quantity");
-const btnExecute = document.getElementById("executeOrder");
-
 //Buy order execution
-const buyBtn = document.getElementById("buyBtn");
+
 buyBtn.addEventListener("click", (e) => {
   transactionType.innerText = "Review Buying Order";
   const marketPrice = infoHeaders[1].innerText;
   document.querySelector("#marketPrice").value = marketPrice;
   symbol.value = location.hash.slice(1);
-
   let myStocks = portfolio.computeQuantity();
   if (myStocks.hasOwnProperty(symbol.value)) {
     document.getElementById("label").innerText = `${symbol.value}-${
@@ -71,6 +76,7 @@ buyBtn.addEventListener("click", (e) => {
     $("#transaction").modal("hide");
   };
 });
+
 //---ESTIMATED PRICE DISPLAY
 
 quantity.addEventListener("keyup", (e) => {
@@ -80,7 +86,7 @@ quantity.addEventListener("keyup", (e) => {
 });
 
 //Sell order execution
-const sellBtn = document.getElementById("sellBtn");
+
 sellBtn.addEventListener("click", (e) => {
   transactionType.innerText = "Review Selling Order";
   const marketPrice = infoHeaders[1].innerText;
@@ -109,15 +115,12 @@ sellBtn.addEventListener("click", (e) => {
   };
 });
 
-const PORTFDISPLAY = document.querySelector("#balance");
-const CASHDISPLAY = document.querySelector("#cash");
-
 function display() {
   portfolio.computePortfValue().then((value) => {
-    PORTFDISPLAY.innerHTML = value.toFixed(2);
+    portfolioDisplay.innerHTML = value.toFixed(2);
   });
 
-  CASHDISPLAY.innerHTML = JSON.parse(portfolio.retrieveCash()).toFixed(2);
+  cashdisplay.innerHTML = JSON.parse(portfolio.retrieveCash()).toFixed(2);
 
   let boughtStocks = "";
 
@@ -142,7 +145,6 @@ function display() {
       ${stockValue.toFixed(2)}
   </div>
   </div>`;
-      console.log(boughtStocks);
       $("#portfolioItems").html(boughtStocks);
     }
   });
@@ -186,3 +188,8 @@ function transactionHistory() {
   });
 }
 transactionHistory();
+
+// To reset the simulator
+btnReset.onclick = (e) => {
+  reset.resetLocalstorage();
+};
