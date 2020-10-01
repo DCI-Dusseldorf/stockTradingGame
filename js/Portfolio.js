@@ -1,12 +1,3 @@
-// Class to get data from Finnhub
-if (!localStorage.myPortfolio) {
-  localStorage.setItem("myPortfolio", "[]");
-}
-
-if (!localStorage.cash) {
-  localStorage.setItem("cash", 1000000);
-}
-
 // class to include in the portfolio
 export class Portfolio {
   cash = 1000000;
@@ -26,6 +17,7 @@ export class Portfolio {
     } catch (e) {
       this.stocks = [];
     }
+    this.initPortfolio();
   }
 
   retrieveCash() {
@@ -108,5 +100,15 @@ export class Portfolio {
     return this.stockWebService.getData(symbol).then((data) => {
       return data["marketPrice"];
     });
+  }
+
+  initPortfolio() {
+    if (!localStorage.myPortfolio) {
+      localStorage.setItem("myPortfolio", "[]");
+    }
+
+    if (!localStorage.cash) {
+      localStorage.setItem("cash", 1000000);
+    }
   }
 }
