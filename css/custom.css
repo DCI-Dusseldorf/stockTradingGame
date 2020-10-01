@@ -30,3 +30,8 @@
 #stockInfo h2 {
   color: white;
 }
+
+.form-control::placeholder {
+  color: blue;
+  opacity: 1; /* Firefox */
+}
