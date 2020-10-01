@@ -30,6 +30,7 @@ searchForm.addEventListener("submit", (e) => {
   search.handleSearch(document.getElementById("searchField").value);
 });
 
+//TODO  Should be moved to Chart class
 function displayChart() {
   if (location.hash.length < 2) return;
   let companySymbol = location.hash.slice(1);
@@ -115,6 +116,7 @@ sellBtn.addEventListener("click", (e) => {
   };
 });
 
+// TODO Should be moved to Portfolio class 
 function display() {
   portfolio.computePortfValue().then((value) => {
     portfolioDisplay.innerHTML = value.toFixed(2);
@@ -149,9 +151,9 @@ function display() {
     }
   });
 }
-
+// TODO display() should be in initPortfolio (Portfolio class, constructor)
 display();
-
+// TODO Should be refactor to TransactionHistory class
 function transactionHistory() {
   const markup = `<table class="table table-hover">
       <thead>
@@ -187,6 +189,7 @@ function transactionHistory() {
     $("#transactionTable tbody").html(trnMarkup);
   });
 }
+// TODO transactionHistory() should be in initTransactionHistory (TransactionHistory class, constructor)
 transactionHistory();
 
 // To reset the simulator
