@@ -4,12 +4,12 @@ import AlphaVantageService from "./api/AlphaVantageService.js";
 import SearchProxy from "./proxy/SearchProxy.js";
 import Chart from "./Chart.js";
 import Search from "./Search.js";
-import { Portfolio } from "./portfolio.js";
+import { Portfolio } from "./Portfolio.js";
 
 let searchWebService = new SearchProxy(new AlphaVantageService());
 let stockWebService = new StockProxy(new FinnHubService());
 let search = new Search(searchWebService);
-let PORTFOLIO = new Portfolio(stockWebService);
+let portfolio = new Portfolio(stockWebService);
 
 const searchForm = document.getElementById("searchForm");
 searchForm.addEventListener("submit", (e) => {
@@ -53,7 +53,7 @@ buyBtn.addEventListener("click", (e) => {
   document.querySelector("#marketPrice").value = marketPrice;
   symbol.value = location.hash.slice(1);
 
-  let myStocks = PORTFOLIO.computeQuantity();
+  let myStocks = portfolio.computeQuantity();
   if (myStocks.hasOwnProperty(symbol.value)) {
     document.getElementById("label").innerText = `${symbol.value}-${
       myStocks[symbol.value]
@@ -65,7 +65,7 @@ buyBtn.addEventListener("click", (e) => {
   }
   btnExecute.onclick = async (e) => {
     e.preventDefault();
-    await PORTFOLIO.executeBuy(symbol.value, quantity.value);
+    await portfolio.executeBuy(symbol.value, quantity.value);
     display();
     transactionHistory();
     $("#transaction").modal("hide");
@@ -86,7 +86,7 @@ sellBtn.addEventListener("click", (e) => {
   const marketPrice = infoHeaders[1].innerText;
   document.querySelector("#marketPrice").value = marketPrice;
   symbol.value = location.hash.slice(1);
-  let myStocks = PORTFOLIO.computeQuantity();
+  let myStocks = portfolio.computeQuantity();
   if (myStocks.hasOwnProperty(symbol.value)) {
     document.getElementById("label").innerText = `${symbol.value}-${
       myStocks[symbol.value]
@@ -99,7 +99,7 @@ sellBtn.addEventListener("click", (e) => {
   btnExecute.onclick = async (e) => {
     e.preventDefault();
     if (Number(quantity.value) > 0) {
-      await PORTFOLIO.executeSell(symbol.value, quantity.value);
+      await portfolio.executeSell(symbol.value, quantity.value);
       display();
       transactionHistory();
       $("#transaction").modal("hide");
@@ -113,21 +113,21 @@ const PORTFDISPLAY = document.querySelector("#balance");
 const CASHDISPLAY = document.querySelector("#cash");
 
 function display() {
-  PORTFOLIO.computePortfValue().then((value) => {
+  portfolio.computePortfValue().then((value) => {
     PORTFDISPLAY.innerHTML = value.toFixed(2);
   });
 
-  CASHDISPLAY.innerHTML = JSON.parse(PORTFOLIO.retrieveCash()).toFixed(2);
+  CASHDISPLAY.innerHTML = JSON.parse(portfolio.retrieveCash()).toFixed(2);
 
   let boughtStocks = "";
 
   // remove all items first
   $("#portfolioItems").html("");
-  let myStocks = PORTFOLIO.computeQuantity();
+  let myStocks = portfolio.computeQuantity();
 
   Object.keys(myStocks).forEach(async function (key) {
     if (myStocks[key] !== 0) {
-      const stockValue = myStocks[key] * (await PORTFOLIO.getCurrentPrice(key));
+      const stockValue = myStocks[key] * (await portfolio.getCurrentPrice(key));
 
       boughtStocks += `<div
   class="a bg-white bg-hover-gradient-blue shadow roundy px-4 py-3 d-flex align-items-center justify-content-between mb-4"
